@@ -37,6 +37,34 @@ class Appointment
         ]);
     }
 
+    public function removeServices(int $appointmentId): void
+    {
+        $statement = $this->pdo->prepare(
+            'DELETE FROM appointment_services
+            WHERE appointment_id = :appointment_id'
+        );
+
+        $statement->execute([
+            'appointment_id' => $appointmentId
+        ]);
+    }
+
+    public function update(
+        int $appointmentId,
+        string $appointmentDatetime
+    ): void {
+        $statement = $this->pdo->prepare(
+            'UPDATE appointments
+            SET appointment_datetime = :appointment_datetime
+            WHERE id = :id'
+        );
+
+        $statement->execute([
+            'appointment_datetime' => $appointmentDatetime,
+            'id' => $appointmentId
+        ]);
+    }
+
     public function findServices(int $appointmentId): array
     {
         $statement = $this->pdo->prepare(

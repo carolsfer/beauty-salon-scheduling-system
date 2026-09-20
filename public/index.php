@@ -33,6 +33,14 @@ switch ($action) {
         $appointmentController->details();
         break;
     
+    case 'edit':
+        $appointmentController->edit();
+        break;
+
+    case 'update':
+        $appointmentController->update();
+        break;
+
     case 'home':
     default:
         require __DIR__ . '/../views/home.php';

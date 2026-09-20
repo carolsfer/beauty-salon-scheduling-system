@@ -104,7 +104,32 @@ class AppointmentController
             echo 'Não foi possível criar o agendamento.';
         }
     }
-    
+
+    public function edit(): void
+    {
+        $appointmentId = (int) ($_GET['id'] ?? 0);
+
+        if ($appointmentId <= 0) {
+            echo 'Agendamento inválido.';
+            return;
+        }
+
+        $appointmentModel = new Appointment($this->pdo);
+        $appointment = $appointmentModel->findById($appointmentId);
+
+        if (!$appointment) {
+            echo 'Agendamento não encontrado.';
+            return;
+        }
+
+        $selectedServices = $appointmentModel->findServices($appointmentId);
+
+        $serviceModel = new Service($this->pdo);
+        $services = $serviceModel->findAll();
+
+        require __DIR__ . '/../views/appointments/edit.php';
+    }
+
     public function searchAppointments(): void
     {
         $phone = trim($_POST['phone'] ?? '');
@@ -162,5 +187,71 @@ class AppointmentController
         $services = $appointmentModel->findServices($appointmentId);
 
         require __DIR__ . '/../views/appointments/details.php';
+    }
+
+    public function update(): void
+    {
+        $appointmentId = (int) ($_POST['appointment_id'] ?? 0);
+        $services = $_POST['services'] ?? [];
+        $date = trim($_POST['date'] ?? '');
+        $time = trim($_POST['time'] ?? '');
+
+        if ($appointmentId <= 0) {
+            echo 'Agendamento inválido.';
+            return;
+        }
+
+        if (empty($services)) {
+            echo 'Selecione pelo menos um serviço.';
+            return;
+        }
+
+        if ($date === '' || $time === '') {
+            echo 'Data e horário são obrigatórios.';
+            return;
+        }
+
+        $appointmentDatetime = $date . ' ' . $time . ':00';
+
+        $appointmentModel = new Appointment($this->pdo);
+
+        $appointment = $appointmentModel->findById($appointmentId);
+
+        if (!$appointment) {
+            echo 'Agendamento não encontrado.';
+            return;
+        }
+
+        try {
+            $this->pdo->beginTransaction();
+
+            $appointmentModel->update(
+                $appointmentId,
+                $appointmentDatetime
+            );
+
+            $appointmentModel->removeServices($appointmentId);
+
+            foreach ($services as $serviceId) {
+                $appointmentModel->addService(
+                    $appointmentId,
+                    (int) $serviceId
+                );
+            }
+
+            $this->pdo->commit();
+
+            header(
+                'Location: ?action=details&id=' . $appointmentId
+            );
+
+            exit;
+        } catch (Throwable $exception) {
+            if ($this->pdo->inTransaction()) {
+                $this->pdo->rollBack();
+            }
+
+            echo 'Não foi possível alterar o agendamento.';
+        }
     }
 }
