@@ -23,4 +23,17 @@ class Appointment
 
         return (int) $this->pdo->lastInsertId();
     }
+
+    public function addService(int $appointmentId, int $serviceId): void
+    {
+        $statement = $this->pdo->prepare(
+            'INSERT INTO appointment_services (appointment_id, service_id)
+             VALUES (:appointment_id, :service_id)'
+        );
+
+        $statement->execute([
+            'appointment_id' => $appointmentId,
+            'service_id' => $serviceId
+        ]);
+    }
 }

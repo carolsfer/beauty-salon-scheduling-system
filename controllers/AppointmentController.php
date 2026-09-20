@@ -46,6 +46,7 @@ class AppointmentController
 
         require __DIR__ . '/../views/appointments/services.php';
     }
+    
     public function schedule(): void
     {
         $clientId = (int) ($_POST['client_id'] ?? 0);
@@ -72,11 +73,30 @@ class AppointmentController
 
         $appointmentModel = new Appointment($this->pdo);
 
-        $appointmentId = $appointmentModel->create(
-            $clientId,
-            $appointmentDatetime
-        );
+        try {
+            $this->pdo->beginTransaction();
 
-        echo 'Agendamento criado com sucesso. ID: ' . $appointmentId;
+            $appointmentId = $appointmentModel->create(
+                $clientId,
+                $appointmentDatetime
+            );
+
+            foreach ($services as $serviceId) {
+                $appointmentModel->addService(
+                    $appointmentId,
+                    (int) $serviceId
+                );
+            }
+
+            $this->pdo->commit();
+
+            echo 'Agendamento criado com sucesso. ID: ' . $appointmentId;
+        } catch (Throwable $exception) {
+            if ($this->pdo->inTransaction()) {
+                $this->pdo->rollBack();
+            }
+
+            echo 'Não foi possível criar o agendamento.';
+        }
     }
 }
