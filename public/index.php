@@ -1,11 +1,19 @@
 <?php
 
 $pdo = require __DIR__ . '/../config/database.php';
+require_once __DIR__ . '/../models/Client.php';
 
-$query = $pdo->query('SELECT id, name FROM services');
+$clientModel = new Client($pdo);
 
-$services = $query->fetchAll();
+$name = 'Cliente Teste';
+$phone = '14999999999';
 
-foreach ($services as $service) {
-    echo $service['name'] . '<br>';
+$client = $clientModel->findByPhone($phone);
+
+if (!$client) {
+    $clientId = $clientModel->create($name, $phone);
+
+    echo 'Cliente criado com ID: ' . $clientId;
+} else {
+    echo 'Cliente já cadastrado: ' . $client['name'];
 }
