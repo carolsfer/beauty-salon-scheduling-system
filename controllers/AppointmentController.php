@@ -122,6 +122,13 @@ class AppointmentController
             return;
         }
 
+        if (!$appointmentModel->canBeEditedByClient(
+            $appointment['appointment_datetime']
+        )) {
+            echo 'Este agendamento não pode mais ser alterado online. Entre em contato com o salão por telefone.';
+            return;
+        }
+
         $selectedServices = $appointmentModel->findServices($appointmentId);
 
         $serviceModel = new Service($this->pdo);
@@ -186,6 +193,10 @@ class AppointmentController
 
         $services = $appointmentModel->findServices($appointmentId);
 
+        $canEdit = $appointmentModel->canBeEditedByClient(
+            $appointment['appointment_datetime']
+        );
+
         require __DIR__ . '/../views/appointments/details.php';
     }
 
@@ -219,6 +230,13 @@ class AppointmentController
 
         if (!$appointment) {
             echo 'Agendamento não encontrado.';
+            return;
+        }
+
+        if (!$appointmentModel->canBeEditedByClient(
+            $appointment['appointment_datetime']
+        )) {
+            echo 'Este agendamento não pode mais ser alterado online. Entre em contato com o salão por telefone.';
             return;
         }
 

@@ -129,4 +129,16 @@ class Appointment
 
         return $statement->fetchAll();
     }
+
+    public function canBeEditedByClient(string $appointmentDatetime): bool
+    {
+        $appointmentDate = new DateTime($appointmentDatetime);
+        $today = new DateTime('today');
+
+        $limitDate = (clone $appointmentDate)
+            ->setTime(0, 0)
+            ->modify('-2 days');
+
+        return $today <= $limitDate;
+    }
 }

@@ -53,9 +53,20 @@
 
     <?php endif; ?>
 
-    <a href="?action=edit&id=<?= $appointment['id'] ?>">
-        Alterar agendamento
-    </a>
+    <?php if ($canEdit): ?>
+
+        <a href="?action=edit&id=<?= $appointment['id'] ?>">
+            Alterar agendamento
+        </a>
+
+    <?php else: ?>
+
+        <p>
+            Este agendamento não pode mais ser alterado online.
+            Entre em contato com o salão por telefone.
+        </p>
+
+    <?php endif; ?>
 
     <a href="?action=list">
         Voltar
