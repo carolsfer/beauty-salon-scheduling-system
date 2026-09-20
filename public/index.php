@@ -17,6 +17,10 @@ switch ($action) {
         $appointmentController->identifyClient();
         break;
 
+    case 'schedule':
+        $appointmentController->schedule();
+        break;
+        
     case 'home':
     default:
         require __DIR__ . '/../views/home.php';
