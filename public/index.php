@@ -1,19 +1,24 @@
 <?php
 
 $pdo = require __DIR__ . '/../config/database.php';
-require_once __DIR__ . '/../models/Client.php';
 
-$clientModel = new Client($pdo);
+require_once __DIR__ . '/../controllers/AppointmentController.php';
 
-$name = 'Cliente Teste';
-$phone = '14999999999';
+$action = $_GET['action'] ?? 'home';
 
-$client = $clientModel->findByPhone($phone);
+$appointmentController = new AppointmentController($pdo);
 
-if (!$client) {
-    $clientId = $clientModel->create($name, $phone);
+switch ($action) {
+    case 'create':
+        $appointmentController->create();
+        break;
 
-    echo 'Cliente criado com ID: ' . $clientId;
-} else {
-    echo 'Cliente já cadastrado: ' . $client['name'];
+    case 'identify-client':
+        $appointmentController->identifyClient();
+        break;
+
+    case 'home':
+    default:
+        require __DIR__ . '/../views/home.php';
+        break;
 }
