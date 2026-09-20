@@ -20,6 +20,10 @@ switch ($action) {
     case 'schedule':
         $appointmentController->schedule();
         break;
+        
+    case 'confirm-schedule':
+        $appointmentController->confirmSchedule();
+        break;
 
     case 'list':
         $appointmentController->search();

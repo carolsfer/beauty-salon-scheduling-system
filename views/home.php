@@ -8,9 +8,10 @@
 </head>
 
 <body>
-    <h1>Cabeleleila Leila</h1>
+    <h1>Cabeleleila Leila Salão de Beleiza</h1>
 
-    <p>Agende seus serviços de beleza de forma simples e rápida.</p>
+    <p>Venha fazer suas unhas, seus cabelos e até mesmo hidratar suas madeixas de cabelo conosco.</p>
+    <p>Tudo esterilizado para você não ficar mal!</p>
 
     <a href="?action=create">
         Agendar horário

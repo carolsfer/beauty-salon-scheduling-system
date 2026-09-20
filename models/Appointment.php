@@ -141,4 +141,56 @@ class Appointment
 
         return $today <= $limitDate;
     }
+
+    public function findInSameWeek(
+        int $clientId,
+        string $appointmentDatetime
+    ): ?array {
+        $date = new DateTime($appointmentDatetime);
+
+        $weekStart = (clone $date)
+            ->modify('monday this week')
+            ->setTime(0, 0, 0);
+
+        $weekEnd = (clone $date)
+            ->modify('sunday this week')
+            ->setTime(23, 59, 59);
+
+        $statement = $this->pdo->prepare(
+            'SELECT id, appointment_datetime, status
+            FROM appointments
+            WHERE client_id = :client_id
+            AND appointment_datetime BETWEEN :week_start AND :week_end
+            ORDER BY appointment_datetime
+            LIMIT 1'
+        );
+
+        $statement->execute([
+            'client_id' => $clientId,
+            'week_start' => $weekStart->format('Y-m-d H:i:s'),
+            'week_end' => $weekEnd->format('Y-m-d H:i:s')
+        ]);
+
+        $appointment = $statement->fetch();
+
+        return $appointment ?: null;
+    }
+    public function hasService(
+        int $appointmentId,
+        int $serviceId
+    ): bool {
+        $statement = $this->pdo->prepare(
+            'SELECT 1
+            FROM appointment_services
+            WHERE appointment_id = :appointment_id
+            AND service_id = :service_id'
+        );
+
+        $statement->execute([
+            'appointment_id' => $appointmentId,
+            'service_id' => $serviceId
+        ]);
+
+        return (bool) $statement->fetch();
+    }
 }

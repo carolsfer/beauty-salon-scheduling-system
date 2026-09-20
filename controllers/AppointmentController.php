@@ -78,6 +78,16 @@ class AppointmentController
 
         $appointmentModel = new Appointment($this->pdo);
 
+        $existingAppointment = $appointmentModel->findInSameWeek(
+            $clientId,
+            $appointmentDatetime
+        );
+
+        if ($existingAppointment) {
+            require __DIR__ . '/../views/appointments/same-week-suggestion.php';
+            return;
+        }
+
         try {
             $this->pdo->beginTransaction();
 
@@ -95,7 +105,100 @@ class AppointmentController
 
             $this->pdo->commit();
 
-            echo 'Agendamento criado com sucesso. ID: ' . $appointmentId;
+            header(
+                'Location: ?action=details&id=' . $appointmentId
+            );
+
+            exit;
+        } catch (Throwable $exception) {
+            if ($this->pdo->inTransaction()) {
+                $this->pdo->rollBack();
+            }
+
+            echo 'Não foi possível criar o agendamento.';
+        }
+    }
+
+    public function confirmSchedule(): void
+    {
+        $clientId = (int) ($_POST['client_id'] ?? 0);
+        $services = $_POST['services'] ?? [];
+        $date = trim($_POST['date'] ?? '');
+        $time = trim($_POST['time'] ?? '');
+
+        $existingAppointmentId = (int) (
+            $_POST['existing_appointment_id'] ?? 0
+        );
+
+        $choice = $_POST['choice'] ?? '';
+
+        if (
+            $clientId <= 0 ||
+            empty($services) ||
+            $date === '' ||
+            $time === ''
+        ) {
+            echo 'Dados do agendamento inválidos.';
+            return;
+        }
+
+        $appointmentModel = new Appointment($this->pdo);
+
+        try {
+            $this->pdo->beginTransaction();
+
+            if ($choice === 'same-date') {
+                if ($existingAppointmentId <= 0) {
+                    throw new Exception('Agendamento existente inválido.');
+                }
+
+                foreach ($services as $serviceId) {
+                    $serviceId = (int) $serviceId;
+
+                    if (!$appointmentModel->hasService(
+                        $existingAppointmentId,
+                        $serviceId
+                    )) {
+                        $appointmentModel->addService(
+                            $existingAppointmentId,
+                            $serviceId
+                        );
+                    }
+                }
+
+                $appointmentId = $existingAppointmentId;
+            }elseif ($choice === 'keep-date') {
+                $appointmentDatetime = $date . ' ' . $time . ':00';
+
+                $appointmentId = $appointmentModel->create(
+                    $clientId,
+                    $appointmentDatetime
+                );
+
+                foreach ($services as $serviceId) {
+                    $serviceId = (int) $serviceId;
+
+                    if (!$appointmentModel->hasService(
+                        $existingAppointmentId,
+                        $serviceId
+                    )) {
+                        $appointmentModel->addService(
+                            $existingAppointmentId,
+                            $serviceId
+                        );
+                    }
+                }
+            } else {
+                throw new Exception('Opção inválida.');
+            }
+
+            $this->pdo->commit();
+
+            header(
+                'Location: ?action=details&id=' . $appointmentId
+            );
+
+            exit;
         } catch (Throwable $exception) {
             if ($this->pdo->inTransaction()) {
                 $this->pdo->rollBack();
