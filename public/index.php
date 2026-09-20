@@ -20,7 +20,15 @@ switch ($action) {
     case 'schedule':
         $appointmentController->schedule();
         break;
-        
+
+    case 'list':
+        $appointmentController->search();
+        break;
+
+    case 'search-appointments':
+        $appointmentController->searchAppointments();
+        break;
+    
     case 'home':
     default:
         require __DIR__ . '/../views/home.php';

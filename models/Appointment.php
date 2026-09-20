@@ -36,4 +36,27 @@ class Appointment
             'service_id' => $serviceId
         ]);
     }
+
+    public function findByClientAndPeriod(
+        int $clientId,
+        string $startDate,
+        string $endDate
+    ): array {
+        $statement = $this->pdo->prepare(
+            'SELECT id, appointment_datetime, status
+            FROM appointments
+            WHERE client_id = :client_id
+            AND appointment_datetime >= :start_date
+            AND appointment_datetime <= :end_date
+            ORDER BY appointment_datetime'
+        );
+
+        $statement->execute([
+            'client_id' => $clientId,
+            'start_date' => $startDate . ' 00:00:00',
+            'end_date' => $endDate . ' 23:59:59'
+        ]);
+
+        return $statement->fetchAll();
+    }
 }

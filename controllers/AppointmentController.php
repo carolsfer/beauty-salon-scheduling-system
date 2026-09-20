@@ -18,6 +18,11 @@ class AppointmentController
         require __DIR__ . '/../views/appointments/create.php';
     }
 
+    public function search(): void
+    {
+        require __DIR__ . '/../views/appointments/search.php';
+    }
+
     public function identifyClient(): void
     {
         $name = trim($_POST['name'] ?? '');
@@ -98,5 +103,40 @@ class AppointmentController
 
             echo 'Não foi possível criar o agendamento.';
         }
+    }
+    public function searchAppointments(): void
+    {
+        $phone = trim($_POST['phone'] ?? '');
+        $startDate = trim($_POST['start_date'] ?? '');
+        $endDate = trim($_POST['end_date'] ?? '');
+
+        if ($phone === '' || $startDate === '' || $endDate === '') {
+            echo 'Preencha todos os campos.';
+            return;
+        }
+
+        if ($startDate > $endDate) {
+            echo 'A data inicial não pode ser posterior à data final.';
+            return;
+        }
+
+        $clientModel = new Client($this->pdo);
+
+        $client = $clientModel->findByPhone($phone);
+
+        if (!$client) {
+            echo 'Cliente não encontrado.';
+            return;
+        }
+
+        $appointmentModel = new Appointment($this->pdo);
+
+        $appointments = $appointmentModel->findByClientAndPeriod(
+            (int) $client['id'],
+            $startDate,
+            $endDate
+        );
+
+        require __DIR__ . '/../views/appointments/list.php';
     }
 }
