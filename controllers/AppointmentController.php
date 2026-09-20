@@ -167,7 +167,7 @@ class AppointmentController
                 }
 
                 $appointmentId = $existingAppointmentId;
-            }elseif ($choice === 'keep-date') {
+            } elseif ($choice === 'keep-date') {
                 $appointmentDatetime = $date . ' ' . $time . ':00';
 
                 $appointmentId = $appointmentModel->create(
@@ -176,17 +176,10 @@ class AppointmentController
                 );
 
                 foreach ($services as $serviceId) {
-                    $serviceId = (int) $serviceId;
-
-                    if (!$appointmentModel->hasService(
-                        $existingAppointmentId,
-                        $serviceId
-                    )) {
-                        $appointmentModel->addService(
-                            $existingAppointmentId,
-                            $serviceId
-                        );
-                    }
+                    $appointmentModel->addService(
+                        $appointmentId,
+                        (int) $serviceId
+                    );
                 }
             } else {
                 throw new Exception('Opção inválida.');
