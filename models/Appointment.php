@@ -37,6 +37,48 @@ class Appointment
         ]);
     }
 
+    public function findServices(int $appointmentId): array
+    {
+        $statement = $this->pdo->prepare(
+            'SELECT s.id, s.name
+            FROM services s
+            JOIN appointment_services aps
+                ON aps.service_id = s.id
+            WHERE aps.appointment_id = :appointment_id
+            ORDER BY s.id'
+        );
+
+        $statement->execute([
+            'appointment_id' => $appointmentId
+        ]);
+
+        return $statement->fetchAll();
+    }
+
+    public function findById(int $appointmentId): ?array
+    {
+        $statement = $this->pdo->prepare(
+            'SELECT
+                a.id,
+                a.client_id,
+                a.appointment_datetime,
+                a.status,
+                c.name AS client_name,
+                c.phone AS client_phone
+            FROM appointments a
+            JOIN clients c ON c.id = a.client_id
+            WHERE a.id = :id'
+        );
+
+        $statement->execute([
+            'id' => $appointmentId
+        ]);
+
+        $appointment = $statement->fetch();
+
+        return $appointment ?: null;
+    }
+
     public function findByClientAndPeriod(
         int $clientId,
         string $startDate,

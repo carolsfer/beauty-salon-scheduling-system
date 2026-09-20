@@ -104,6 +104,7 @@ class AppointmentController
             echo 'Não foi possível criar o agendamento.';
         }
     }
+    
     public function searchAppointments(): void
     {
         $phone = trim($_POST['phone'] ?? '');
@@ -138,5 +139,28 @@ class AppointmentController
         );
 
         require __DIR__ . '/../views/appointments/list.php';
+    }
+
+    public function details(): void
+    {
+        $appointmentId = (int) ($_GET['id'] ?? 0);
+
+        if ($appointmentId <= 0) {
+            echo 'Agendamento inválido.';
+            return;
+        }
+
+        $appointmentModel = new Appointment($this->pdo);
+
+        $appointment = $appointmentModel->findById($appointmentId);
+
+        if (!$appointment) {
+            echo 'Agendamento não encontrado.';
+            return;
+        }
+
+        $services = $appointmentModel->findServices($appointmentId);
+
+        require __DIR__ . '/../views/appointments/details.php';
     }
 }

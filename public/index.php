@@ -29,6 +29,10 @@ switch ($action) {
         $appointmentController->searchAppointments();
         break;
     
+    case 'details':
+        $appointmentController->details();
+        break;
+    
     case 'home':
     default:
         require __DIR__ . '/../views/home.php';
