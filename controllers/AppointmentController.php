@@ -1,6 +1,7 @@
 <?php
 
 require_once __DIR__ . '/../models/Client.php';
+require_once __DIR__ . '/../models/Service.php';
 
 class AppointmentController
 {
@@ -18,24 +19,30 @@ class AppointmentController
 
     public function identifyClient(): void
     {
-        $name = trim($_POST['name'] ?? '');
-        $phone = trim($_POST['phone'] ?? '');
+    $name = trim($_POST['name'] ?? '');
+    $phone = trim($_POST['phone'] ?? '');
 
-        if ($name === '' || $phone === '') {
-            echo 'Nome e telefone são obrigatórios.';
-            return;
-        }
-
-        $clientModel = new Client($this->pdo);
-
-        $client = $clientModel->findByPhone($phone);
-
-        if ($client) {
-            $clientId = $client['id'];
-        } else {
-            $clientId = $clientModel->create($name, $phone);
-        }
-
-        echo 'Cliente identificado. ID: ' . $clientId;
+    if ($name === '' || $phone === '') {
+        echo 'Nome e telefone são obrigatórios.';
+        return;
     }
+
+    $clientModel = new Client($this->pdo);
+
+    $client = $clientModel->findByPhone($phone);
+
+    if ($client) {
+        $clientId = $client['id'];
+        $clientName = $client['name'];
+    } else {
+        $clientId = $clientModel->create($name, $phone);
+        $clientName = $name;
+    }
+
+    $serviceModel = new Service($this->pdo);
+
+    $services = $serviceModel->findAll();
+
+    require __DIR__ . '/../views/appointments/services.php';
+}
 }
