@@ -1,93 +1,181 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Alterar agendamento - Cabeleleila Leila</title>
+
+    <link rel="stylesheet" href="css/style.css">
 </head>
 
 <body>
-    <h1>Alterar agendamento</h1>
 
-    <p>
-        Cliente:
-        <?= htmlspecialchars($appointment['client_name']) ?>
-    </p>
+<header class="site-header">
+    <div class="container header-content">
 
-    <form method="POST" action="?action=update">
-        <input
-            type="hidden"
-            name="appointment_id"
-            value="<?= $appointment['id'] ?>"
+        <a href="?action=home" class="logo">
+            Cabeleleila Leila
+        </a>
+
+        <nav class="navigation">
+            <a href="?action=home">Início</a>
+            <a href="?action=create">Agendar</a>
+            <a href="?action=list">Consultar agendamentos</a>
+            <a href="?action=admin-login">Área da Leila</a>
+        </nav>
+
+    </div>
+</header>
+
+<main>
+    <div class="container">
+
+        <div class="page-header">
+            <span>Agendamento</span>
+
+            <h1>Alterar seu horário</h1>
+
+            <p>
+                Atualize os serviços, a data ou o horário
+                do seu agendamento.
+            </p>
+        </div>
+
+        <form
+            method="POST"
+            action="?action=update"
+            class="form-card"
         >
 
-        <?php
-        $selectedServiceIds = array_column(
-            $selectedServices,
-            'id'
-        );
-        ?>
+            <input
+                type="hidden"
+                name="appointment_id"
+                value="<?= (int) $appointment['id'] ?>"
+            >
 
-        <h2>Serviços</h2>
+            <div class="client-summary">
+                <span>Agendamento para</span>
 
-        <?php foreach ($services as $service): ?>
-
-            <div>
-                <input
-                    type="checkbox"
-                    id="service-<?= $service['id'] ?>"
-                    name="services[]"
-                    value="<?= $service['id'] ?>"
-                    <?= in_array(
-                        $service['id'],
-                        $selectedServiceIds
-                    ) ? 'checked' : '' ?>
-                >
-
-                <label for="service-<?= $service['id'] ?>">
-                    <?= htmlspecialchars($service['name']) ?>
-                </label>
+                <strong>
+                    <?= htmlspecialchars($appointment['client_name']) ?>
+                </strong>
             </div>
 
-        <?php endforeach; ?>
+            <?php
+            $selectedServiceIds = array_column(
+                $selectedServices,
+                'id'
+            );
+            ?>
 
-        <div>
-            <label for="date">Data</label>
+            <div class="form-group">
+                <span class="form-label">
+                    Serviços
+                </span>
 
-            <input
-                type="date"
-                id="date"
-                name="date"
-                value="<?= date(
-                    'Y-m-d',
-                    strtotime($appointment['appointment_datetime'])
-                ) ?>"
-                required
-            >
-        </div>
+                <div class="checkbox-list">
 
-        <div>
-            <label for="time">Horário</label>
+                    <?php foreach ($services as $service): ?>
 
-            <input
-                type="time"
-                id="time"
-                name="time"
-                value="<?= date(
-                    'H:i',
-                    strtotime($appointment['appointment_datetime'])
-                ) ?>"
-                required
-            >
-        </div>
+                        <label
+                            class="checkbox-option"
+                            for="service-<?= (int) $service['id'] ?>"
+                        >
 
-        <button type="submit">
-            Salvar alterações
-        </button>
-    </form>
+                            <input
+                                type="checkbox"
+                                id="service-<?= (int) $service['id'] ?>"
+                                name="services[]"
+                                value="<?= (int) $service['id'] ?>"
+                                <?= in_array(
+                                    $service['id'],
+                                    $selectedServiceIds
+                                ) ? 'checked' : '' ?>
+                            >
 
-    <a href="?action=details&id=<?= $appointment['id'] ?>">
-        Voltar
-    </a>
+                            <span>
+                                <?= htmlspecialchars($service['name']) ?>
+                            </span>
+
+                        </label>
+
+                    <?php endforeach; ?>
+
+                </div>
+            </div>
+
+            <div class="date-time-grid">
+
+                <div class="form-group">
+                    <label for="date">
+                        Data
+                    </label>
+
+                    <input
+                        type="date"
+                        id="date"
+                        name="date"
+                        min="<?= date('Y-m-d') ?>"
+                        value="<?= date(
+                            'Y-m-d',
+                            strtotime(
+                                $appointment['appointment_datetime']
+                            )
+                        ) ?>"
+                        required
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="time">
+                        Horário
+                    </label>
+
+                    <input
+                        type="time"
+                        id="time"
+                        name="time"
+                        value="<?= date(
+                            'H:i',
+                            strtotime(
+                                $appointment['appointment_datetime']
+                            )
+                        ) ?>"
+                        required
+                    >
+                </div>
+
+            </div>
+
+            <div class="form-actions">
+                <button
+                    type="submit"
+                    class="button"
+                >
+                    Salvar alterações
+                </button>
+            </div>
+
+        </form>
+
+        <a
+            href="?action=details&id=<?= (int) $appointment['id'] ?>"
+            class="back-link"
+        >
+            ← Cancelar alterações
+        </a>
+
+    </div>
+</main>
+
+<footer class="site-footer">
+    <div class="container">
+        Cabeleleila Leila — Salão de Beleza
+    </div>
+</footer>
+
 </body>
+
 </html>

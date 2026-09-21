@@ -1,75 +1,156 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Detalhes do agendamento - Cabeleleila Leila</title>
+
+    <link rel="stylesheet" href="css/style.css">
 </head>
 
 <body>
-    <h1>Detalhes do agendamento</h1>
 
-    <p>
-        Cliente:
-        <?= htmlspecialchars($appointment['client_name']) ?>
-    </p>
+<header class="site-header">
+    <div class="container header-content">
 
-    <p>
-        Data:
-        <?= date(
-            'd/m/Y',
-            strtotime($appointment['appointment_datetime'])
-        ) ?>
-    </p>
-
-    <p>
-        Horário:
-        <?= date(
-            'H:i',
-            strtotime($appointment['appointment_datetime'])
-        ) ?>
-    </p>
-
-    <p>
-        Status:
-        <?= htmlspecialchars($appointment['status']) ?>
-    </p>
-
-    <h2>Serviços</h2>
-
-    <?php if (empty($services)): ?>
-
-        <p>Nenhum serviço associado.</p>
-
-    <?php else: ?>
-
-        <ul>
-            <?php foreach ($services as $service): ?>
-                <li>
-                    <?= htmlspecialchars($service['name']) ?>
-                </li>
-            <?php endforeach; ?>
-        </ul>
-
-    <?php endif; ?>
-
-    <?php if ($canEdit): ?>
-
-        <a href="?action=edit&id=<?= $appointment['id'] ?>">
-            Alterar agendamento
+        <a href="?action=home" class="logo">
+            Cabeleleila Leila
         </a>
 
-    <?php else: ?>
+        <nav class="navigation">
+            <a href="?action=home">Início</a>
+            <a href="?action=create">Agendar</a>
+            <a href="?action=list">Consultar agendamentos</a>
+            <a href="?action=admin-login">Área da Leila</a>
+        </nav>
 
-        <p>
-            Este agendamento não pode mais ser alterado online.
-            Entre em contato com o salão por telefone.
-        </p>
+    </div>
+</header>
 
-    <?php endif; ?>
+<main>
+    <div class="container">
 
-    <a href="?action=list">
-        Voltar
-    </a>
+        <?php
+        $statusLabels = [
+            'PENDING' => 'Pendente',
+            'CONFIRMED' => 'Confirmado',
+            'COMPLETED' => 'Concluído'
+        ];
+
+        $status = $appointment['status'];
+        $statusLabel = $statusLabels[$status] ?? $status;
+        ?>
+
+        <div class="page-header">
+            <span>Agendamento</span>
+
+            <h1>Detalhes do seu horário</h1>
+
+            <p>
+                Confira as informações do seu agendamento.
+            </p>
+        </div>
+
+        <section class="details-card">
+
+            <div class="details-header">
+
+                <div>
+                    <span class="details-label">Cliente</span>
+
+                    <h2>
+                        <?= htmlspecialchars($appointment['client_name']) ?>
+                    </h2>
+                </div>
+
+                <span class="status-badge status-<?= strtolower($status) ?>">
+                    <?= htmlspecialchars($statusLabel) ?>
+                </span>
+
+            </div>
+
+            <div class="details-grid">
+
+                <div class="detail-item">
+                    <span>Data</span>
+
+                    <strong>
+                        <?= date(
+                            'd/m/Y',
+                            strtotime($appointment['appointment_datetime'])
+                        ) ?>
+                    </strong>
+                </div>
+
+                <div class="detail-item">
+                    <span>Horário</span>
+
+                    <strong>
+                        <?= date(
+                            'H:i',
+                            strtotime($appointment['appointment_datetime'])
+                        ) ?>
+                    </strong>
+                </div>
+
+            </div>
+
+            <div class="details-services">
+
+                <span class="details-label">
+                    Serviços
+                </span>
+
+                <ul>
+                    <?php foreach ($services as $service): ?>
+                        <li>
+                            <?= htmlspecialchars($service['name']) ?>
+                        </li>
+                    <?php endforeach; ?>
+                </ul>
+
+            </div>
+
+        </section>
+
+        <div class="details-actions">
+
+            <?php if ($canEdit): ?>
+
+                <a
+                    href="?action=edit&id=<?= (int) $appointment['id'] ?>"
+                    class="button"
+                >
+                    Alterar agendamento
+                </a>
+
+            <?php else: ?>
+
+                <div class="message message-error">
+                    Este agendamento não pode mais ser alterado online.
+                    Para alterações com menos de dois dias de antecedência,
+                    entre em contato com o salão.
+                </div>
+
+            <?php endif; ?>
+
+            <a href="?action=list" class="button button-secondary">
+                Voltar
+            </a>
+
+        </div>
+
+    </div>
+</main>
+
+<footer class="site-footer">
+    <div class="container">
+        Cabeleleila Leila — Salão de Beleza
+    </div>
+</footer>
+
 </body>
+
 </html>
