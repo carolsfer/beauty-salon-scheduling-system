@@ -161,6 +161,7 @@ class Appointment
             FROM appointments
             WHERE client_id = :client_id
             AND appointment_datetime BETWEEN :week_start AND :week_end
+            AND appointment_datetime > NOW()
             ORDER BY appointment_datetime
             LIMIT 1'
         );

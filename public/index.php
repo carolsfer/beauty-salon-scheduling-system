@@ -1,5 +1,7 @@
 <?php
 
+date_default_timezone_set('America/Sao_Paulo');
+
 $pdo = require __DIR__ . '/../config/database.php';
 
 require_once __DIR__ . '/../controllers/AppointmentController.php';

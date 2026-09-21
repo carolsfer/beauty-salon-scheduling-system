@@ -71,6 +71,13 @@ class AppointmentController
             return;
         }
 
+        $clientModel = new Client($this->pdo);
+
+        if (!$clientModel->findById($clientId)) {
+            echo 'Cliente inválido.';
+            return;
+        }
+
         if (empty($services)) {
             echo 'Selecione pelo menos um serviço.';
             return;
@@ -167,6 +174,13 @@ class AppointmentController
             $time === ''
         ) {
             echo 'Dados do agendamento inválidos.';
+            return;
+        }
+
+        $clientModel = new Client($this->pdo);
+
+        if (!$clientModel->findById($clientId)) {
+            echo 'Cliente inválido.';
             return;
         }
 

@@ -28,6 +28,23 @@ class Client
     {
         return preg_replace('/\D/', '', $phone);
     }
+
+    public function findById(int $clientId): ?array
+    {
+        $statement = $this->pdo->prepare(
+            'SELECT id, name, phone
+            FROM clients
+            WHERE id = :id'
+        );
+
+        $statement->execute([
+            'id' => $clientId
+        ]);
+
+        $client = $statement->fetch();
+
+        return $client ?: null;
+    }
     
     public function create(string $name, string $phone): int
     {
