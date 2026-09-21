@@ -175,6 +175,28 @@ class Appointment
 
         return $appointment ?: null;
     }
+
+    public function isDatetimeInFuture(string $appointmentDatetime): bool
+    {
+        $appointmentDate = new DateTime($appointmentDatetime);
+        $now = new DateTime();
+
+        return $appointmentDate > $now;
+    }
+
+    public function isValidDatetime(
+        string $date,
+        string $time
+    ): bool {
+        $datetime = DateTime::createFromFormat(
+            'Y-m-d H:i',
+            $date . ' ' . $time
+        );
+
+        return $datetime !== false
+            && $datetime->format('Y-m-d H:i') === $date . ' ' . $time;
+    }
+
     public function hasService(
         int $appointmentId,
         int $serviceId

@@ -23,6 +23,11 @@ class Client
 
         return $client ?: null;
     }
+
+    public function normalizePhone(string $phone): string
+    {
+        return preg_replace('/\D/', '', $phone);
+    }
     
     public function create(string $name, string $phone): int
     {

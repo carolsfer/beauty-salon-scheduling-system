@@ -34,6 +34,13 @@ class AppointmentController
         }
 
         $clientModel = new Client($this->pdo);
+        
+        $phone = $clientModel->normalizePhone($phone);
+
+        if (strlen($phone) < 10 || strlen($phone) > 11) {
+            echo 'Informe um telefone válido com DDD.';
+            return;
+        }
 
         $client = $clientModel->findByPhone($phone);
 
@@ -74,9 +81,19 @@ class AppointmentController
             return;
         }
 
+        $appointmentModel = new Appointment($this->pdo);
+
+        if (!$appointmentModel->isValidDatetime($date, $time)) {
+            echo 'Data ou horário inválido.';
+            return;
+        }
+
         $appointmentDatetime = $date . ' ' . $time . ':00';
 
-        $appointmentModel = new Appointment($this->pdo);
+        if (!$appointmentModel->isDatetimeInFuture($appointmentDatetime)) {
+            echo 'A data e o horário do agendamento devem ser futuros.';
+            return;
+        }
 
         $existingAppointment = $appointmentModel->findInSameWeek(
             $clientId,
@@ -169,6 +186,10 @@ class AppointmentController
                 $appointmentId = $existingAppointmentId;
             } elseif ($choice === 'keep-date') {
                 $appointmentDatetime = $date . ' ' . $time . ':00';
+            
+                if (!$appointmentModel->isDatetimeInFuture($appointmentDatetime)) {
+                    throw new Exception('Data e horário inválidos.');
+                }
 
                 $appointmentId = $appointmentModel->create(
                     $clientId,
@@ -251,6 +272,13 @@ class AppointmentController
 
         $clientModel = new Client($this->pdo);
 
+        $phone = $clientModel->normalizePhone($phone);
+
+        if (strlen($phone) < 10 || strlen($phone) > 11) {
+            echo 'Informe um telefone válido com DDD.';
+            return;
+        }
+
         $client = $clientModel->findByPhone($phone);
 
         if (!$client) {
@@ -318,9 +346,19 @@ class AppointmentController
             return;
         }
 
+        $appointmentModel = new Appointment($this->pdo);
+
+        if (!$appointmentModel->isValidDatetime($date, $time)) {
+            echo 'Data ou horário inválido.';
+            return;
+        }
+
         $appointmentDatetime = $date . ' ' . $time . ':00';
 
-        $appointmentModel = new Appointment($this->pdo);
+        if (!$appointmentModel->isDatetimeInFuture($appointmentDatetime)) {
+            echo 'A data e o horário do agendamento devem ser futuros.';
+            return;
+        }
 
         $appointment = $appointmentModel->findById($appointmentId);
 
