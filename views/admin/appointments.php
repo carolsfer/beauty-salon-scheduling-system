@@ -17,62 +17,104 @@
         <p>Nenhum agendamento encontrado.</p>
 
     <?php else: ?>
+        
+        <form method="POST" action="?action=admin-update-statuses">
 
-        <table border="1" cellpadding="8">
-            <thead>
-                <tr>
-                    <th>Data</th>
-                    <th>Horário</th>
-                    <th>Cliente</th>
-                    <th>Telefone</th>
-                    <th>Status</th>
-                    <th>Ações</th>
-                </tr>
-            </thead>
-
-            <tbody>
-                <?php foreach ($appointments as $appointment): ?>
+            <table border="1" cellpadding="8">
+                <thead>
                     <tr>
-                        <td>
-                            <?= date(
-                                'd/m/Y',
-                                strtotime($appointment['appointment_datetime'])
-                            ) ?>
-                        </td>
-
-                        <td>
-                            <?= date(
-                                'H:i',
-                                strtotime($appointment['appointment_datetime'])
-                            ) ?>
-                        </td>
-
-                        <td>
-                            <?= htmlspecialchars($appointment['client_name']) ?>
-                        </td>
-
-                        <td>
-                            <?= htmlspecialchars($appointment['client_phone']) ?>
-                        </td>
-
-                        <td>
-                            <?= htmlspecialchars($appointment['status']) ?>
-                        </td>
-
-                        <td>
-                            <a href="?action=details&id=<?= (int) $appointment['id'] ?>">
-                                Ver
-                            </a>
-                            <a href="?action=admin-edit&id=<?= (int) $appointment['id'] ?>">
-                                Editar
-                            </a>
-                        </td>
+                        <th>Data</th>
+                        <th>Horário</th>
+                        <th>Cliente</th>
+                        <th>Telefone</th>
+                        <th>Status</th>
+                        <th>Ações</th>
                     </tr>
-                <?php endforeach; ?>
-            </tbody>
-        </table>
+                </thead>
 
+                <tbody>
+                    <?php foreach ($appointments as $appointment): ?>
+                        <tr>
+                            <td>
+                                <?= date(
+                                    'd/m/Y',
+                                    strtotime($appointment['appointment_datetime'])
+                                ) ?>
+                            </td>
+
+                            <td>
+                                <?= date(
+                                    'H:i',
+                                    strtotime($appointment['appointment_datetime'])
+                                ) ?>
+                            </td>
+
+                            <td>
+                                <?= htmlspecialchars($appointment['client_name']) ?>
+                            </td>
+
+                            <td>
+                                <?= htmlspecialchars($appointment['client_phone']) ?>
+                            </td>
+
+                            <td>
+                                <select
+                                    name="statuses[<?= (int) $appointment['id'] ?>]"
+                                >
+                                    <option
+                                        value="PENDING"
+                                        <?= $appointment['status'] === 'PENDING'
+                                            ? 'selected'
+                                            : '' ?>
+                                    >
+                                        Pendente
+                                    </option>
+
+                                    <option
+                                        value="CONFIRMED"
+                                        <?= $appointment['status'] === 'CONFIRMED'
+                                            ? 'selected'
+                                            : '' ?>
+                                    >
+                                        Confirmado
+                                    </option>
+
+                                    <option
+                                        value="COMPLETED"
+                                        <?= $appointment['status'] === 'COMPLETED'
+                                            ? 'selected'
+                                            : '' ?>
+                                    >
+                                        Concluído
+                                    </option>
+                                </select>
+                            </td>
+
+                            <td>
+                                <a href="?action=details&id=<?= (int) $appointment['id'] ?>">
+                                    Ver
+                                </a>
+
+                                <a href="?action=admin-edit&id=<?= (int) $appointment['id'] ?>">
+                                    Editar
+                                </a>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+
+            <br>
+
+            <button type="submit">
+                Salvar alterações
+            </button>
+
+        </form>
     <?php endif; ?>
+    <a href="?action=admin-dashboard">
+        Desempenho semanal
+    </a>
     <p>
         <a href="?action=admin-logout">
             Sair

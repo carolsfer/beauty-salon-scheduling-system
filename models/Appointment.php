@@ -65,6 +65,22 @@ class Appointment
         ]);
     }
 
+    public function updateStatus(
+        int $appointmentId,
+        string $status
+    ): void {
+        $statement = $this->pdo->prepare(
+            'UPDATE appointments
+            SET status = :status
+            WHERE id = :id'
+        );
+
+        $statement->execute([
+            'status' => $status,
+            'id' => $appointmentId
+        ]);
+    }
+
     public function findServices(int $appointmentId): array
     {
         $statement = $this->pdo->prepare(
@@ -232,5 +248,50 @@ class Appointment
         ]);
 
         return (bool) $statement->fetch();
+    }
+
+    public function getWeeklySummary(
+        string $weekStart,
+        string $weekEnd
+    ): array {
+        $statement = $this->pdo->prepare(
+            'SELECT
+                COUNT(*) AS total,
+                SUM(status = "PENDING") AS pending,
+                SUM(status = "CONFIRMED") AS confirmed,
+                SUM(status = "COMPLETED") AS completed
+            FROM appointments
+            WHERE appointment_datetime
+                BETWEEN :week_start AND :week_end'
+        );
+
+        $statement->execute([
+            'week_start' => $weekStart,
+            'week_end' => $weekEnd
+        ]);
+
+        return $statement->fetch();
+    }
+
+    public function getCompletedServicesCount(
+        string $weekStart,
+        string $weekEnd
+    ): int {
+        $statement = $this->pdo->prepare(
+            'SELECT COUNT(*)
+            FROM appointment_services aps
+            JOIN appointments a
+                ON a.id = aps.appointment_id
+            WHERE a.status = "COMPLETED"
+            AND a.appointment_datetime
+                BETWEEN :week_start AND :week_end'
+        );
+
+        $statement->execute([
+            'week_start' => $weekStart,
+            'week_end' => $weekEnd
+        ]);
+
+        return (int) $statement->fetchColumn();
     }
 }

@@ -77,6 +77,14 @@ switch ($action) {
         $appointmentController->adminUpdate();
         break;
 
+    case 'admin-update-statuses':
+        $appointmentController->adminUpdateStatuses();
+        break;
+
+    case 'admin-dashboard':
+        $appointmentController->adminDashboard();
+        break;
+    
     case 'home':
     default:
         require __DIR__ . '/../views/home.php';

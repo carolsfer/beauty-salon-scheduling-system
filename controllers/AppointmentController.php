@@ -603,4 +603,95 @@ class AppointmentController
             echo 'Não foi possível alterar o agendamento.';
         }
     }
+
+    public function adminUpdateStatuses(): void
+    {
+        $this->requireAdmin();
+
+        $statuses = $_POST['statuses'] ?? [];
+
+        if (empty($statuses)) {
+            echo 'Nenhum status recebido.';
+            return;
+        }
+
+        $allowedStatuses = [
+            'PENDING',
+            'CONFIRMED',
+            'COMPLETED'
+        ];
+
+        $appointmentModel = new Appointment($this->pdo);
+
+        try {
+            $this->pdo->beginTransaction();
+
+            foreach ($statuses as $appointmentId => $status) {
+                $appointmentId = (int) $appointmentId;
+
+                if (
+                    $appointmentId <= 0 ||
+                    !in_array($status, $allowedStatuses, true)
+                ) {
+                    throw new Exception('Status inválido.');
+                }
+
+                $appointment = $appointmentModel->findById(
+                    $appointmentId
+                );
+
+                if (!$appointment) {
+                    throw new Exception('Agendamento inválido.');
+                }
+
+                $appointmentModel->updateStatus(
+                    $appointmentId,
+                    $status
+                );
+            }
+
+            $this->pdo->commit();
+
+            header('Location: ?action=admin-appointments');
+            exit;
+
+        } catch (Throwable $exception) {
+
+            if ($this->pdo->inTransaction()) {
+                $this->pdo->rollBack();
+            }
+
+            echo 'Não foi possível atualizar os status.';
+        }
+    }
+    
+    public function adminDashboard(): void
+    {
+        $this->requireAdmin();
+
+        $today = new DateTime();
+
+        $weekStart = (clone $today)
+            ->modify('monday this week')
+            ->setTime(0, 0, 0);
+
+        $weekEnd = (clone $today)
+            ->modify('sunday this week')
+            ->setTime(23, 59, 59);
+
+        $appointmentModel = new Appointment($this->pdo);
+
+        $summary = $appointmentModel->getWeeklySummary(
+            $weekStart->format('Y-m-d H:i:s'),
+            $weekEnd->format('Y-m-d H:i:s')
+        );
+
+        $completedServices = $appointmentModel
+            ->getCompletedServicesCount(
+                $weekStart->format('Y-m-d H:i:s'),
+                $weekEnd->format('Y-m-d H:i:s')
+            );
+
+        require __DIR__ . '/../views/admin/dashboard.php';
+    }
 }
