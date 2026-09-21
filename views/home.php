@@ -20,5 +20,11 @@
     <a href="?action=list">
         Consultar meus agendamentos
     </a>
+
+    <p>
+        <a href="?action=admin-login">
+            Área da Leila
+        </a>
+    </p>
 </body>
 </html>

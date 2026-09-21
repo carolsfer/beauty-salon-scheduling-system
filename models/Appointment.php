@@ -83,6 +83,23 @@ class Appointment
         return $statement->fetchAll();
     }
 
+    public function findAll(): array
+    {
+        $statement = $this->pdo->query(
+            'SELECT
+                a.id,
+                a.appointment_datetime,
+                a.status,
+                c.name AS client_name,
+                c.phone AS client_phone
+            FROM appointments a
+            JOIN clients c ON c.id = a.client_id
+            ORDER BY a.appointment_datetime'
+        );
+
+        return $statement->fetchAll();
+    }
+
     public function findById(int $appointmentId): ?array
     {
         $statement = $this->pdo->prepare(

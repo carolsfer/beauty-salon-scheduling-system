@@ -462,4 +462,145 @@ class AppointmentController
             echo 'Não foi possível alterar o agendamento.';
         }
     }
+
+    private function requireAdmin(): void
+    {
+        if (empty($_SESSION['admin_logged_in'])) {
+            header('Location: ?action=admin-login');
+            exit;
+        }
+    }
+
+    public function adminList(): void
+    {
+        $this->requireAdmin();
+
+        $appointmentModel = new Appointment($this->pdo);
+
+        $appointments = $appointmentModel->findAll();
+
+        require __DIR__ . '/../views/admin/appointments.php';
+    }
+
+    public function adminEdit(): void
+    {
+        $this->requireAdmin();
+
+        $appointmentId = (int) ($_GET['id'] ?? 0);
+
+        if ($appointmentId <= 0) {
+            echo 'Agendamento inválido.';
+            return;
+        }
+
+        $appointmentModel = new Appointment($this->pdo);
+        $appointment = $appointmentModel->findById($appointmentId);
+
+        if (!$appointment) {
+            echo 'Agendamento não encontrado.';
+            return;
+        }
+
+        $serviceModel = new Service($this->pdo);
+
+        $services = $serviceModel->findAll();
+        $appointmentServices = $appointmentModel->findServices(
+            $appointmentId
+        );
+
+        $selectedServiceIds = array_column(
+            $appointmentServices,
+            'id'
+        );
+
+        require __DIR__ . '/../views/admin/edit-appointment.php';
+    }
+
+    public function adminUpdate(): void
+    {
+        $this->requireAdmin();    
+
+        $appointmentId = (int) ($_POST['appointment_id'] ?? 0);
+        $services = $_POST['services'] ?? [];
+        $date = trim($_POST['date'] ?? '');
+        $time = trim($_POST['time'] ?? '');
+
+        if ($appointmentId <= 0) {
+            echo 'Agendamento inválido.';
+            return;
+        }
+
+        if (empty($services)) {
+            echo 'Selecione pelo menos um serviço.';
+            return;
+        }
+
+        if ($date === '' || $time === '') {
+            echo 'Data e horário são obrigatórios.';
+            return;
+        }
+
+        $appointmentModel = new Appointment($this->pdo);
+
+        $appointment = $appointmentModel->findById($appointmentId);
+
+        if (!$appointment) {
+            echo 'Agendamento não encontrado.';
+            return;
+        }
+
+        if (!$appointmentModel->isValidDatetime($date, $time)) {
+            echo 'Data ou horário inválido.';
+            return;
+        }
+
+        $appointmentDatetime = $date . ' ' . $time . ':00';
+
+        if (!$appointmentModel->isDatetimeInFuture($appointmentDatetime)) {
+            echo 'A data e o horário do agendamento devem ser futuros.';
+            return;
+        }
+
+        $services = array_unique(array_map('intval', $services));
+
+        $serviceModel = new Service($this->pdo);
+
+        foreach ($services as $serviceId) {
+            if ($serviceId <= 0 || !$serviceModel->exists($serviceId)) {
+                echo 'Um dos serviços selecionados é inválido.';
+                return;
+            }
+        }
+
+        try {
+            $this->pdo->beginTransaction();
+
+            $appointmentModel->update(
+                $appointmentId,
+                $appointmentDatetime
+            );
+
+            $appointmentModel->removeServices($appointmentId);
+
+            foreach ($services as $serviceId) {
+                $appointmentModel->addService(
+                    $appointmentId,
+                    $serviceId
+                );
+            }
+
+            $this->pdo->commit();
+
+            header(
+                'Location: ?action=admin-appointments'
+            );
+            exit;
+        } catch (Throwable $exception) {
+            if ($this->pdo->inTransaction()) {
+                $this->pdo->rollBack();
+            }
+
+            echo 'Não foi possível alterar o agendamento.';
+        }
+    }
 }

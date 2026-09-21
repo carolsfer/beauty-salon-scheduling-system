@@ -1,5 +1,7 @@
 <?php
 
+session_start();
+
 date_default_timezone_set('America/Sao_Paulo');
 
 $pdo = require __DIR__ . '/../config/database.php';
@@ -7,6 +9,10 @@ $pdo = require __DIR__ . '/../config/database.php';
 require_once __DIR__ . '/../controllers/AppointmentController.php';
 
 $action = $_GET['action'] ?? 'home';
+
+require_once __DIR__ . '/../controllers/AdminController.php';
+
+$adminController = new AdminController();
 
 $appointmentController = new AppointmentController($pdo);
 
@@ -45,6 +51,30 @@ switch ($action) {
 
     case 'update':
         $appointmentController->update();
+        break;
+
+    case 'admin-login':
+        $adminController->login();
+        break;
+
+    case 'admin-authenticate':
+        $adminController->authenticate();
+        break;
+
+    case 'admin-logout':
+        $adminController->logout();
+        break;
+    
+    case 'admin-appointments':
+        $appointmentController->adminList();
+        break;
+
+    case 'admin-edit':
+        $appointmentController->adminEdit();
+        break;
+
+    case 'admin-update':
+        $appointmentController->adminUpdate();
         break;
 
     case 'home':
