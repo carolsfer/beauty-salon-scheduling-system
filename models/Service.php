@@ -17,4 +17,19 @@ class Service
 
         return $statement->fetchAll();
     }
+
+    public function exists(int $serviceId): bool
+    {
+        $statement = $this->pdo->prepare(
+            'SELECT 1
+            FROM services
+            WHERE id = :id'
+        );
+
+        $statement->execute([
+            'id' => $serviceId
+        ]);
+
+        return (bool) $statement->fetchColumn();
+    }
 }

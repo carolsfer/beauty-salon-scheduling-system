@@ -76,6 +76,17 @@ class AppointmentController
             return;
         }
 
+        $services = array_unique(array_map('intval', $services));
+
+        $serviceModel = new Service($this->pdo);
+
+        foreach ($services as $serviceId) {
+            if ($serviceId <= 0 || !$serviceModel->exists($serviceId)) {
+                echo 'Um dos serviços selecionados é inválido.';
+                return;
+            }
+        }
+
         if ($date === '' || $time === '') {
             echo 'Data e horário são obrigatórios.';
             return;
@@ -159,6 +170,17 @@ class AppointmentController
             return;
         }
 
+        $services = array_unique(array_map('intval', $services));
+
+        $serviceModel = new Service($this->pdo);
+
+        foreach ($services as $serviceId) {
+            if ($serviceId <= 0 || !$serviceModel->exists($serviceId)) {
+                echo 'Um dos serviços selecionados é inválido.';
+                return;
+            }
+        }
+
         $appointmentModel = new Appointment($this->pdo);
 
         try {
@@ -169,9 +191,18 @@ class AppointmentController
                     throw new Exception('Agendamento existente inválido.');
                 }
 
-                foreach ($services as $serviceId) {
-                    $serviceId = (int) $serviceId;
+                $existingAppointment = $appointmentModel->findById(
+                    $existingAppointmentId
+                );
 
+                if (
+                    !$existingAppointment ||
+                    (int) $existingAppointment['client_id'] !== $clientId
+                ) {
+                    throw new Exception('Agendamento existente inválido.');
+                }
+
+                foreach ($services as $serviceId) {
                     if (!$appointmentModel->hasService(
                         $existingAppointmentId,
                         $serviceId
@@ -339,6 +370,17 @@ class AppointmentController
         if (empty($services)) {
             echo 'Selecione pelo menos um serviço.';
             return;
+        }
+
+        $services = array_unique(array_map('intval', $services));
+
+        $serviceModel = new Service($this->pdo);
+
+        foreach ($services as $serviceId) {
+            if ($serviceId <= 0 || !$serviceModel->exists($serviceId)) {
+                echo 'Um dos serviços selecionados é inválido.';
+                return;
+            }
         }
 
         if ($date === '' || $time === '') {
