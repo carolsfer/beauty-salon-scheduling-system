@@ -135,9 +135,20 @@
                 </div>
 
             <?php endif; ?>
+            
+            <?php
+            $isAdminView = ($_GET['from'] ?? '') === 'admin';
+            ?>
 
-            <a href="?action=list" class="button button-secondary">
-                Voltar
+            <a
+                href="<?= $isAdminView
+                    ? '?action=admin-appointments'
+                    : '?action=list' ?>"
+                class="back-link"
+            >
+                ← <?= $isAdminView
+                    ? 'Voltar para os agendamentos'
+                    : 'Voltar para a consulta' ?>
             </a>
 
         </div>

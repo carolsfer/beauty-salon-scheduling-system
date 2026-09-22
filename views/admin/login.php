@@ -2,60 +2,87 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <title>Área da Leila</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Área da Leila | Cabeleleila Leila</title>
+
+    <link rel="stylesheet" href="css/style.css">
 </head>
 
 <body>
+    <header class="site-header">
+        <div class="container header-content">
+            <a href="?action=home" class="logo">
+                Cabeleleila Leila
+            </a>
 
-    <h1>Área da Leila</h1>
+            <nav class="navigation">
+                <a href="?action=home">Voltar ao site</a>
+            </nav>
+        </div>
+    </header>
 
-    <p>Acesso administrativo do salão.</p>
+    <main>
+        <div class="container">
+            <div class="page-header">
+                <span>Área administrativa</span>
+                <h1>Área da Leila</h1>
+                <p>
+                    Entre para gerenciar os agendamentos do salão.
+                </p>
+            </div>
 
-    <?php if (!empty($error)): ?>
-        <p>
-            <?= htmlspecialchars($error) ?>
-        </p>
-    <?php endif; ?>
+            <?php if (!empty($error)): ?>
+                <div class="message message-error">
+                    <?= htmlspecialchars($error) ?>
+                </div>
+            <?php endif; ?>
 
-    <form method="POST" action="?action=admin-authenticate">
+            <form
+                method="POST"
+                action="?action=admin-authenticate"
+                class="form-card admin-login-card"
+            >
+                <div class="form-group">
+                    <label for="username">Usuário</label>
 
-        <label for="username">
-            Usuário:
-        </label>
+                    <input
+                        type="text"
+                        id="username"
+                        name="username"
+                        autocomplete="username"
+                        required
+                    >
+                </div>
 
-        <input
-            type="text"
-            id="username"
-            name="username"
-            required
-        >
+                <div class="form-group">
+                    <label for="password">Senha</label>
 
-        <br><br>
+                    <input
+                        type="password"
+                        id="password"
+                        name="password"
+                        autocomplete="current-password"
+                        required
+                    >
+                </div>
 
-        <label for="password">
-            Senha:
-        </label>
+                <div class="form-actions">
+                    <button type="submit" class="button">
+                        Entrar
+                    </button>
+                </div>
+            </form>
 
-        <input
-            type="password"
-            id="password"
-            name="password"
-            required
-        >
+            <a href="?action=home" class="back-link">
+                ← Voltar para o início
+            </a>
+        </div>
+    </main>
 
-        <br><br>
-
-        <button type="submit">
-            Entrar
-        </button>
-
-    </form>
-
-    <p>
-        <a href="?action=home">
-            Voltar para o início
-        </a>
-    </p>
-
+    <footer class="site-footer">
+        <div class="container">
+            Cabeleleila Leila — Área administrativa
+        </div>
+    </footer>
 </body>
 </html>
