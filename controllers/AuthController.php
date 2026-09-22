@@ -1,6 +1,6 @@
 <?php
 
-class AdminController
+class AuthController
 {
     private array $env;
 

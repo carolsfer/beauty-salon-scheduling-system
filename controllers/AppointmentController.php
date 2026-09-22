@@ -34,7 +34,7 @@ class AppointmentController
         }
 
         $clientModel = new Client($this->pdo);
-        
+
         $phone = $clientModel->normalizePhone($phone);
 
         if (strlen($phone) < 10 || strlen($phone) > 11) {
@@ -62,7 +62,7 @@ class AppointmentController
 
         require __DIR__ . '/../views/appointments/services.php';
     }
-    
+
     public function schedule(): void
     {
         $clientId = (int) ($_POST['client_id'] ?? 0);
@@ -206,7 +206,9 @@ class AppointmentController
 
             if ($choice === 'same-date') {
                 if ($existingAppointmentId <= 0) {
-                    throw new Exception('Agendamento existente inválido.');
+                    throw new Exception(
+                        'Agendamento existente inválido.'
+                    );
                 }
 
                 $existingAppointment = $appointmentModel->findById(
@@ -217,14 +219,18 @@ class AppointmentController
                     !$existingAppointment ||
                     (int) $existingAppointment['client_id'] !== $clientId
                 ) {
-                    throw new Exception('Agendamento existente inválido.');
+                    throw new Exception(
+                        'Agendamento existente inválido.'
+                    );
                 }
 
                 foreach ($services as $serviceId) {
-                    if (!$appointmentModel->hasService(
-                        $existingAppointmentId,
-                        $serviceId
-                    )) {
+                    if (
+                        !$appointmentModel->hasService(
+                            $existingAppointmentId,
+                            $serviceId
+                        )
+                    ) {
                         $appointmentModel->addService(
                             $existingAppointmentId,
                             $serviceId
@@ -235,9 +241,15 @@ class AppointmentController
                 $appointmentId = $existingAppointmentId;
             } elseif ($choice === 'keep-date') {
                 $appointmentDatetime = $date . ' ' . $time . ':00';
-            
-                if (!$appointmentModel->isDatetimeInFuture($appointmentDatetime)) {
-                    throw new Exception('Data e horário inválidos.');
+
+                if (
+                    !$appointmentModel->isDatetimeInFuture(
+                        $appointmentDatetime
+                    )
+                ) {
+                    throw new Exception(
+                        'Data e horário inválidos.'
+                    );
                 }
 
                 $appointmentId = $appointmentModel->create(
@@ -288,14 +300,18 @@ class AppointmentController
             return;
         }
 
-        if (!$appointmentModel->canBeEditedByClient(
-            $appointment['appointment_datetime']
-        )) {
+        if (
+            !$appointmentModel->canBeEditedByClient(
+                $appointment['appointment_datetime']
+            )
+        ) {
             echo 'Este agendamento não pode mais ser alterado online. Entre em contato com o salão por telefone.';
             return;
         }
 
-        $selectedServices = $appointmentModel->findServices($appointmentId);
+        $selectedServices = $appointmentModel->findServices(
+            $appointmentId
+        );
 
         $serviceModel = new Service($this->pdo);
         $services = $serviceModel->findAll();
@@ -364,7 +380,9 @@ class AppointmentController
             return;
         }
 
-        $services = $appointmentModel->findServices($appointmentId);
+        $services = $appointmentModel->findServices(
+            $appointmentId
+        );
 
         $canEdit = $appointmentModel->canBeEditedByClient(
             $appointment['appointment_datetime']
@@ -427,9 +445,11 @@ class AppointmentController
             return;
         }
 
-        if (!$appointmentModel->canBeEditedByClient(
-            $appointment['appointment_datetime']
-        )) {
+        if (
+            !$appointmentModel->canBeEditedByClient(
+                $appointment['appointment_datetime']
+            )
+        ) {
             echo 'Este agendamento não pode mais ser alterado online. Entre em contato com o salão por telefone.';
             return;
         }
@@ -465,237 +485,5 @@ class AppointmentController
 
             echo 'Não foi possível alterar o agendamento.';
         }
-    }
-
-    private function requireAdmin(): void
-    {
-        if (empty($_SESSION['admin_logged_in'])) {
-            header('Location: ?action=admin-login');
-            exit;
-        }
-    }
-
-    public function adminList(): void
-    {
-        $this->requireAdmin();
-
-        $appointmentModel = new Appointment($this->pdo);
-
-        $appointments = $appointmentModel->findAll();
-
-        require __DIR__ . '/../views/admin/appointments.php';
-    }
-
-    public function adminEdit(): void
-    {
-        $this->requireAdmin();
-
-        $appointmentId = (int) ($_GET['id'] ?? 0);
-
-        if ($appointmentId <= 0) {
-            echo 'Agendamento inválido.';
-            return;
-        }
-
-        $appointmentModel = new Appointment($this->pdo);
-        $appointment = $appointmentModel->findById($appointmentId);
-
-        if (!$appointment) {
-            echo 'Agendamento não encontrado.';
-            return;
-        }
-
-        $serviceModel = new Service($this->pdo);
-
-        $services = $serviceModel->findAll();
-        $appointmentServices = $appointmentModel->findServices(
-            $appointmentId
-        );
-
-        $selectedServiceIds = array_column(
-            $appointmentServices,
-            'id'
-        );
-
-        require __DIR__ . '/../views/admin/edit-appointment.php';
-    }
-
-    public function adminUpdate(): void
-    {
-        $this->requireAdmin();    
-
-        $appointmentId = (int) ($_POST['appointment_id'] ?? 0);
-        $services = $_POST['services'] ?? [];
-        $date = trim($_POST['date'] ?? '');
-        $time = trim($_POST['time'] ?? '');
-
-        if ($appointmentId <= 0) {
-            echo 'Agendamento inválido.';
-            return;
-        }
-
-        if (empty($services)) {
-            echo 'Selecione pelo menos um serviço.';
-            return;
-        }
-
-        if ($date === '' || $time === '') {
-            echo 'Data e horário são obrigatórios.';
-            return;
-        }
-
-        $appointmentModel = new Appointment($this->pdo);
-
-        $appointment = $appointmentModel->findById($appointmentId);
-
-        if (!$appointment) {
-            echo 'Agendamento não encontrado.';
-            return;
-        }
-
-        if (!$appointmentModel->isValidDatetime($date, $time)) {
-            echo 'Data ou horário inválido.';
-            return;
-        }
-
-        $appointmentDatetime = $date . ' ' . $time . ':00';
-
-        if (!$appointmentModel->isDatetimeInFuture($appointmentDatetime)) {
-            echo 'A data e o horário do agendamento devem ser futuros.';
-            return;
-        }
-
-        $services = array_unique(array_map('intval', $services));
-
-        $serviceModel = new Service($this->pdo);
-
-        foreach ($services as $serviceId) {
-            if ($serviceId <= 0 || !$serviceModel->exists($serviceId)) {
-                echo 'Um dos serviços selecionados é inválido.';
-                return;
-            }
-        }
-
-        try {
-            $this->pdo->beginTransaction();
-
-            $appointmentModel->update(
-                $appointmentId,
-                $appointmentDatetime
-            );
-
-            $appointmentModel->removeServices($appointmentId);
-
-            foreach ($services as $serviceId) {
-                $appointmentModel->addService(
-                    $appointmentId,
-                    $serviceId
-                );
-            }
-
-            $this->pdo->commit();
-
-            header(
-                'Location: ?action=admin-appointments'
-            );
-            exit;
-        } catch (Throwable $exception) {
-            if ($this->pdo->inTransaction()) {
-                $this->pdo->rollBack();
-            }
-
-            echo 'Não foi possível alterar o agendamento.';
-        }
-    }
-
-    public function adminUpdateStatuses(): void
-    {
-        $this->requireAdmin();
-
-        $statuses = $_POST['statuses'] ?? [];
-
-        if (empty($statuses)) {
-            echo 'Nenhum status recebido.';
-            return;
-        }
-
-        $allowedStatuses = [
-            'PENDING',
-            'CONFIRMED',
-            'COMPLETED'
-        ];
-
-        $appointmentModel = new Appointment($this->pdo);
-
-        try {
-            $this->pdo->beginTransaction();
-
-            foreach ($statuses as $appointmentId => $status) {
-                $appointmentId = (int) $appointmentId;
-
-                if (
-                    $appointmentId <= 0 ||
-                    !in_array($status, $allowedStatuses, true)
-                ) {
-                    throw new Exception('Status inválido.');
-                }
-
-                $appointment = $appointmentModel->findById(
-                    $appointmentId
-                );
-
-                if (!$appointment) {
-                    throw new Exception('Agendamento inválido.');
-                }
-
-                $appointmentModel->updateStatus(
-                    $appointmentId,
-                    $status
-                );
-            }
-
-            $this->pdo->commit();
-
-            header('Location: ?action=admin-appointments');
-            exit;
-
-        } catch (Throwable $exception) {
-
-            if ($this->pdo->inTransaction()) {
-                $this->pdo->rollBack();
-            }
-
-            echo 'Não foi possível atualizar os status.';
-        }
-    }
-    
-    public function adminDashboard(): void
-    {
-        $this->requireAdmin();
-
-        $today = new DateTime();
-
-        $weekStart = (clone $today)
-            ->modify('monday this week')
-            ->setTime(0, 0, 0);
-
-        $weekEnd = (clone $today)
-            ->modify('sunday this week')
-            ->setTime(23, 59, 59);
-
-        $appointmentModel = new Appointment($this->pdo);
-
-        $summary = $appointmentModel->getWeeklySummary(
-            $weekStart->format('Y-m-d H:i:s'),
-            $weekEnd->format('Y-m-d H:i:s')
-        );
-
-        $completedServices = $appointmentModel
-            ->getCompletedServicesCount(
-                $weekStart->format('Y-m-d H:i:s'),
-                $weekEnd->format('Y-m-d H:i:s')
-            );
-
-        require __DIR__ . '/../views/admin/dashboard.php';
     }
 }
