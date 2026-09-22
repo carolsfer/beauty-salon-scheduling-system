@@ -1,88 +1,68 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Área da Leila | Cabeleleila Leila</title>
+<?php
 
-    <link rel="stylesheet" href="css/style.css">
-</head>
+$pageTitle = 'Área da Leila - Cabeleleila Leila';
+$layoutContext = 'admin-login';
 
-<body>
-    <header class="site-header">
-        <div class="container header-content">
-            <a href="?action=home" class="logo">
-                Cabeleleila Leila
-            </a>
+require __DIR__ . '/../layouts/header.php';
 
-            <nav class="navigation">
-                <a href="?action=home">Voltar ao site</a>
-            </nav>
+?>
+
+<main>
+    <div class="container">
+        <div class="page-header">
+            <span>Área administrativa</span>
+            <h1>Área da Leila</h1>
+            <p>
+                Entre para gerenciar os agendamentos do salão.
+            </p>
         </div>
-    </header>
 
-    <main>
-        <div class="container">
-            <div class="page-header">
-                <span>Área administrativa</span>
-                <h1>Área da Leila</h1>
-                <p>
-                    Entre para gerenciar os agendamentos do salão.
-                </p>
+        <?php if (!empty($error)): ?>
+            <div class="message message-error">
+                <?= htmlspecialchars($error) ?>
+            </div>
+        <?php endif; ?>
+
+        <form
+            method="POST"
+            action="?action=admin-authenticate"
+            class="form-card admin-login-card"
+        >
+            <div class="form-group">
+                <label for="username">Usuário</label>
+
+                <input
+                    type="text"
+                    id="username"
+                    name="username"
+                    autocomplete="username"
+                    required
+                >
             </div>
 
-            <?php if (!empty($error)): ?>
-                <div class="message message-error">
-                    <?= htmlspecialchars($error) ?>
-                </div>
-            <?php endif; ?>
+            <div class="form-group">
+                <label for="password">Senha</label>
 
-            <form
-                method="POST"
-                action="?action=admin-authenticate"
-                class="form-card admin-login-card"
-            >
-                <div class="form-group">
-                    <label for="username">Usuário</label>
+                <input
+                    type="password"
+                    id="password"
+                    name="password"
+                    autocomplete="current-password"
+                    required
+                >
+            </div>
 
-                    <input
-                        type="text"
-                        id="username"
-                        name="username"
-                        autocomplete="username"
-                        required
-                    >
-                </div>
+            <div class="form-actions">
+                <button type="submit" class="button">
+                    Entrar
+                </button>
+            </div>
+        </form>
 
-                <div class="form-group">
-                    <label for="password">Senha</label>
+        <a href="?action=home" class="back-link">
+            ← Voltar para o início
+        </a>
+    </div>
+</main>
 
-                    <input
-                        type="password"
-                        id="password"
-                        name="password"
-                        autocomplete="current-password"
-                        required
-                    >
-                </div>
-
-                <div class="form-actions">
-                    <button type="submit" class="button">
-                        Entrar
-                    </button>
-                </div>
-            </form>
-
-            <a href="?action=home" class="back-link">
-                ← Voltar para o início
-            </a>
-        </div>
-    </main>
-
-    <footer class="site-footer">
-        <div class="container">
-            Cabeleleila Leila — Área administrativa
-        </div>
-    </footer>
-</body>
-</html>
+<?php require __DIR__ . '/../layouts/footer.php'; ?>

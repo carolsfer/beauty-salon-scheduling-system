@@ -1,33 +1,11 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
+<?php
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+$pageTitle = 'Alterar agendamento - Cabeleleila Leila';
+$layoutContext = 'public';
 
-    <title>Alterar agendamento - Cabeleleila Leila</title>
+require __DIR__ . '/../layouts/header.php';
 
-    <link rel="stylesheet" href="css/style.css">
-</head>
-
-<body>
-
-<header class="site-header">
-    <div class="container header-content">
-
-        <a href="?action=home" class="logo">
-            Cabeleleila Leila
-        </a>
-
-        <nav class="navigation">
-            <a href="?action=home">Início</a>
-            <a href="?action=create">Agendar</a>
-            <a href="?action=list">Consultar agendamentos</a>
-            <a href="?action=admin-login">Área da Leila</a>
-        </nav>
-
-    </div>
-</header>
+?>
 
 <main>
     <div class="container">
@@ -170,12 +148,4 @@
     </div>
 </main>
 
-<footer class="site-footer">
-    <div class="container">
-        Cabeleleila Leila — Salão de Beleza
-    </div>
-</footer>
-
-</body>
-
-</html>
+<?php require __DIR__ . '/../layouts/footer.php'; ?>

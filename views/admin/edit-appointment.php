@@ -1,29 +1,11 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<?php
 
-    <title>Editar agendamento | Área da Leila</title>
+$pageTitle = 'Alterar agendamento - Cabeleleila Leila';
+$layoutContext = 'admin';
 
-    <link rel="stylesheet" href="css/style.css">
-</head>
+require __DIR__ . '/../layouts/header.php';
 
-<body>
-
-<header class="site-header">
-    <div class="container header-content">
-        <a href="?action=admin-appointments" class="logo">
-            Área da Leila
-        </a>
-
-        <nav class="navigation">
-            <a href="?action=admin-appointments">Agendamentos</a>
-            <a href="?action=admin-dashboard">Desempenho semanal</a>
-            <a href="?action=admin-logout">Sair</a>
-        </nav>
-    </div>
-</header>
+?>
 
 <main>
     <div class="container">
@@ -139,11 +121,4 @@
     </div>
 </main>
 
-<footer class="site-footer">
-    <div class="container">
-        Cabeleleila Leila — Área administrativa
-    </div>
-</footer>
-
-</body>
-</html>
+<?php require __DIR__ . '/../layouts/footer.php'; ?>
