@@ -43,7 +43,6 @@ class AdminAppointmentController
         }
 
         $serviceModel = new Service($this->pdo);
-
         $services = $serviceModel->findAll();
 
         $appointmentServices = $appointmentModel->findServices(
@@ -83,7 +82,6 @@ class AdminAppointmentController
         }
 
         $appointmentModel = new Appointment($this->pdo);
-
         $appointment = $appointmentModel->findById($appointmentId);
 
         if (!$appointment) {
@@ -162,7 +160,11 @@ class AdminAppointmentController
 
                 if (
                     $appointmentId <= 0 ||
-                    !in_array($status, Appointment::ALLOWED_STATUSES, true)
+                    !in_array(
+                        $status,
+                        Appointment::ALLOWED_STATUSES,
+                        true
+                    )
                 ) {
                     throw new Exception('Status inválido.');
                 }
@@ -198,27 +200,63 @@ class AdminAppointmentController
     {
         $this->requireAdmin();
 
-        $today = new DateTime();
+        $week = trim($_GET['week'] ?? '');
 
-        $weekStart = (clone $today)
+        if ($week !== '') {
+            $referenceDate = DateTime::createFromFormat(
+                '!Y-m-d',
+                $week
+            );
+
+            if (
+                !$referenceDate ||
+                $referenceDate->format('Y-m-d') !== $week
+            ) {
+                $referenceDate = new DateTime();
+            }
+        } else {
+            $referenceDate = new DateTime();
+        }
+
+        $weekStart = (clone $referenceDate)
             ->modify('monday this week')
             ->setTime(0, 0, 0);
 
-        $weekEnd = (clone $today)
-            ->modify('sunday this week')
+        $weekEnd = (clone $weekStart)
+            ->modify('+6 days')
             ->setTime(23, 59, 59);
+
+        $previousWeek = (clone $weekStart)
+            ->modify('-7 days');
+
+        $nextWeek = (clone $weekStart)
+            ->modify('+7 days');
 
         $appointmentModel = new Appointment($this->pdo);
 
+        $weekStartFormatted = $weekStart->format(
+            'Y-m-d H:i:s'
+        );
+
+        $weekEndFormatted = $weekEnd->format(
+            'Y-m-d H:i:s'
+        );
+
         $summary = $appointmentModel->getWeeklySummary(
-            $weekStart->format('Y-m-d H:i:s'),
-            $weekEnd->format('Y-m-d H:i:s')
+            $weekStartFormatted,
+            $weekEndFormatted
         );
 
         $completedServices = $appointmentModel
             ->getCompletedServicesCount(
-                $weekStart->format('Y-m-d H:i:s'),
-                $weekEnd->format('Y-m-d H:i:s')
+                $weekStartFormatted,
+                $weekEndFormatted
+            );
+
+        $completedServicesByType = $appointmentModel
+            ->getCompletedServicesByType(
+                $weekStartFormatted,
+                $weekEndFormatted
             );
 
         require __DIR__ . '/../views/admin/dashboard.php';

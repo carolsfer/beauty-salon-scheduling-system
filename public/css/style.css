@@ -637,6 +637,14 @@ main {
     font-size: 0.95rem;
 }
 
+.week-navigation {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 32px;
+}
+
 .dashboard-section {
     margin-top: 36px;
 }
@@ -713,15 +721,15 @@ main {
 }
 
 .service-performance-card {
-    max-width: 560px;
+    max-width: 760px;
     display: flex;
-    align-items: center;
+    align-items: stretch;
     gap: 32px;
     padding: 24px;
 }
 
-.service-performance-card > div {
-    flex-shrink: 0;
+.service-performance-total {
+    flex: 1;
     display: flex;
     flex-direction: column;
 }
@@ -730,10 +738,44 @@ main {
     margin-top: 8px;
 }
 
-.service-performance-card p {
-    margin: 0;
-    padding-left: 28px;
+.service-performance-total p {
+    margin: 18px 0 0;
+    color: var(--color-text-light);
+    font-size: 0.9rem;
+}
+
+.service-breakdown {
+    flex: 1;
+    padding-left: 32px;
     border-left: 1px solid var(--color-border);
+}
+
+.service-breakdown-list {
+    list-style: none;
+    margin: 12px 0 0;
+    padding: 0;
+}
+
+.service-breakdown-list li {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--color-border);
+}
+
+.service-breakdown-list li:last-child {
+    border-bottom: 0;
+}
+
+.service-breakdown-list strong {
+    color: var(--color-primary);
+    font-size: 1.05rem;
+}
+
+.service-breakdown-empty {
+    margin: 12px 0 0;
     color: var(--color-text-light);
     font-size: 0.9rem;
 }
@@ -845,6 +887,16 @@ main {
         align-self: flex-start;
     }
 
+    .week-navigation {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .week-navigation .button,
+    .week-navigation .dashboard-link {
+        text-align: center;
+    }
+
     .dashboard-section-heading {
         align-items: flex-start;
         flex-direction: column;
@@ -857,14 +909,18 @@ main {
     .metric-card {
         min-height: 145px;
     }
-
+    
     .service-performance-card {
-        align-items: flex-start;
+        align-items: stretch;
         flex-direction: column;
         gap: 18px;
     }
 
-    .service-performance-card p {
+    .service-performance-total p {
+        margin-top: 18px;
+    }
+
+    .service-breakdown {
         padding-top: 18px;
         padding-left: 0;
         border-top: 1px solid var(--color-border);

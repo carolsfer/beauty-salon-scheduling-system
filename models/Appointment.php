@@ -320,4 +320,32 @@ class Appointment
 
         return (int) $statement->fetchColumn();
     }
+
+    public function getCompletedServicesByType(
+        string $weekStart,
+        string $weekEnd
+    ): array {
+        $statement = $this->pdo->prepare(
+            'SELECT
+                s.name,
+                COUNT(*) AS total
+            FROM appointment_services aps
+            JOIN appointments a
+                ON a.id = aps.appointment_id
+            JOIN services s
+                ON s.id = aps.service_id
+            WHERE a.status = "COMPLETED"
+            AND a.appointment_datetime
+                BETWEEN :week_start AND :week_end
+            GROUP BY s.id, s.name
+            ORDER BY total DESC, s.name'
+        );
+
+        $statement->execute([
+            'week_start' => $weekStart,
+            'week_end' => $weekEnd
+        ]);
+
+        return $statement->fetchAll();
+    }
 }

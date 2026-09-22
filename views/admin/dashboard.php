@@ -17,7 +17,7 @@ require __DIR__ . '/../layouts/header.php';
 
                 <p>
                     Acompanhe os agendamentos e serviços realizados
-                    nesta semana.
+                    no período selecionado.
                 </p>
             </div>
 
@@ -31,6 +31,29 @@ require __DIR__ . '/../layouts/header.php';
                 </strong>
             </div>
         </div>
+
+        <nav class="week-navigation">
+            <a
+                href="?action=admin-dashboard&week=<?= $previousWeek->format('Y-m-d') ?>"
+                class="button button-secondary"
+            >
+                ← Semana anterior
+            </a>
+
+            <a
+                href="?action=admin-dashboard"
+                class="dashboard-link"
+            >
+                Semana atual
+            </a>
+
+            <a
+                href="?action=admin-dashboard&week=<?= $nextWeek->format('Y-m-d') ?>"
+                class="button button-secondary"
+            >
+                Próxima semana →
+            </a>
+        </nav>
 
         <section class="dashboard-section">
             <div class="dashboard-section-heading">
@@ -117,7 +140,8 @@ require __DIR__ . '/../layouts/header.php';
             </div>
 
             <div class="card service-performance-card">
-                <div>
+
+                <div class="service-performance-total">
                     <span class="metric-label">
                         Serviços concluídos
                     </span>
@@ -125,12 +149,48 @@ require __DIR__ . '/../layouts/header.php';
                     <strong class="service-performance-value">
                         <?= (int) $completedServices ?>
                     </strong>
+
+                    <p>
+                        Total de serviços realizados nos atendimentos
+                        concluídos nesta semana.
+                    </p>
                 </div>
 
-                <p>
-                    Total de serviços realizados nos atendimentos
-                    concluídos nesta semana.
-                </p>
+                <div class="service-breakdown">
+                    <span class="metric-label">
+                        Por serviço
+                    </span>
+
+                    <?php if (empty($completedServicesByType)): ?>
+
+                        <p class="service-breakdown-empty">
+                            Nenhum serviço concluído nesta semana.
+                        </p>
+
+                    <?php else: ?>
+
+                        <ul class="service-breakdown-list">
+
+                            <?php foreach ($completedServicesByType as $service): ?>
+
+                                <li>
+                                    <span>
+                                        <?= htmlspecialchars($service['name']) ?>
+                                    </span>
+
+                                    <strong>
+                                        <?= (int) $service['total'] ?>
+                                    </strong>
+                                </li>
+
+                            <?php endforeach; ?>
+
+                        </ul>
+
+                    <?php endif; ?>
+
+                </div>
+
             </div>
         </section>
 
