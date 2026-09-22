@@ -103,18 +103,12 @@ class AdminAppointmentController
             return;
         }
 
-        $services = array_unique(array_map('intval', $services));
-
         $serviceModel = new Service($this->pdo);
+        $services = $serviceModel->validateIds($services);
 
-        foreach ($services as $serviceId) {
-            if (
-                $serviceId <= 0 ||
-                !$serviceModel->exists($serviceId)
-            ) {
-                echo 'Um dos serviços selecionados é inválido.';
-                return;
-            }
+        if ($services === null) {
+            echo 'Um dos serviços selecionados é inválido.';
+            return;
         }
 
         try {
@@ -158,12 +152,6 @@ class AdminAppointmentController
             return;
         }
 
-        $allowedStatuses = [
-            'PENDING',
-            'CONFIRMED',
-            'COMPLETED'
-        ];
-
         $appointmentModel = new Appointment($this->pdo);
 
         try {
@@ -174,7 +162,7 @@ class AdminAppointmentController
 
                 if (
                     $appointmentId <= 0 ||
-                    !in_array($status, $allowedStatuses, true)
+                    !in_array($status, Appointment::ALLOWED_STATUSES, true)
                 ) {
                     throw new Exception('Status inválido.');
                 }

@@ -32,4 +32,23 @@ class Service
 
         return (bool) $statement->fetchColumn();
     }
+
+    public function validateIds(array $serviceIds): ?array
+    {
+        if (empty($serviceIds)) {
+            return null;
+        }
+
+        $serviceIds = array_unique(
+            array_map('intval', $serviceIds)
+        );
+
+        foreach ($serviceIds as $serviceId) {
+            if ($serviceId <= 0 || !$this->exists($serviceId)) {
+                return null;
+            }
+        }
+
+        return $serviceIds;
+    }
 }

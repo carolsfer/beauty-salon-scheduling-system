@@ -57,7 +57,6 @@ class AppointmentController
         }
 
         $serviceModel = new Service($this->pdo);
-
         $services = $serviceModel->findAll();
 
         require __DIR__ . '/../views/appointments/services.php';
@@ -87,15 +86,12 @@ class AppointmentController
             return;
         }
 
-        $services = array_unique(array_map('intval', $services));
-
         $serviceModel = new Service($this->pdo);
+        $services = $serviceModel->validateIds($services);
 
-        foreach ($services as $serviceId) {
-            if ($serviceId <= 0 || !$serviceModel->exists($serviceId)) {
-                echo 'Um dos serviços selecionados é inválido.';
-                return;
-            }
+        if ($services === null) {
+            echo 'Um dos serviços selecionados é inválido.';
+            return;
         }
 
         if ($date === '' || $time === '') {
@@ -138,7 +134,7 @@ class AppointmentController
             foreach ($services as $serviceId) {
                 $appointmentModel->addService(
                     $appointmentId,
-                    (int) $serviceId
+                    $serviceId
                 );
             }
 
@@ -188,15 +184,12 @@ class AppointmentController
             return;
         }
 
-        $services = array_unique(array_map('intval', $services));
-
         $serviceModel = new Service($this->pdo);
+        $services = $serviceModel->validateIds($services);
 
-        foreach ($services as $serviceId) {
-            if ($serviceId <= 0 || !$serviceModel->exists($serviceId)) {
-                echo 'Um dos serviços selecionados é inválido.';
-                return;
-            }
+        if ($services === null) {
+            echo 'Um dos serviços selecionados é inválido.';
+            return;
         }
 
         $appointmentModel = new Appointment($this->pdo);
@@ -239,7 +232,14 @@ class AppointmentController
                 }
 
                 $appointmentId = $existingAppointmentId;
-            } elseif ($choice === 'keep-date') {
+                
+                } elseif ($choice === 'keep-date') {
+                if (!$appointmentModel->isValidDatetime($date, $time)) {
+                    throw new Exception(
+                        'Data e horário inválidos.'
+                    );
+                }
+
                 $appointmentDatetime = $date . ' ' . $time . ':00';
 
                 if (
@@ -260,7 +260,7 @@ class AppointmentController
                 foreach ($services as $serviceId) {
                     $appointmentModel->addService(
                         $appointmentId,
-                        (int) $serviceId
+                        $serviceId
                     );
                 }
             } else {
@@ -408,15 +408,12 @@ class AppointmentController
             return;
         }
 
-        $services = array_unique(array_map('intval', $services));
-
         $serviceModel = new Service($this->pdo);
+        $services = $serviceModel->validateIds($services);
 
-        foreach ($services as $serviceId) {
-            if ($serviceId <= 0 || !$serviceModel->exists($serviceId)) {
-                echo 'Um dos serviços selecionados é inválido.';
-                return;
-            }
+        if ($services === null) {
+            echo 'Um dos serviços selecionados é inválido.';
+            return;
         }
 
         if ($date === '' || $time === '') {
@@ -467,7 +464,7 @@ class AppointmentController
             foreach ($services as $serviceId) {
                 $appointmentModel->addService(
                     $appointmentId,
-                    (int) $serviceId
+                    $serviceId
                 );
             }
 

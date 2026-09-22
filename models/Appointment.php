@@ -2,6 +2,16 @@
 
 class Appointment
 {
+    public const STATUS_PENDING = 'PENDING';
+    public const STATUS_CONFIRMED = 'CONFIRMED';
+    public const STATUS_COMPLETED = 'COMPLETED';
+
+    public const ALLOWED_STATUSES = [
+        self::STATUS_PENDING,
+        self::STATUS_CONFIRMED,
+        self::STATUS_COMPLETED
+    ];
+
     private PDO $pdo;
 
     public function __construct(PDO $pdo)
