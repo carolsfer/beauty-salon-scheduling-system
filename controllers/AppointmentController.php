@@ -45,11 +45,15 @@ class AppointmentController
         $client = $clientModel->findByPhone($phone);
 
         if ($client) {
-            $clientId = $client['id'];
-            $clientName = $client['name'];
+            $clientId = (int) $client['id'];
         } else {
             $clientId = $clientModel->create($name, $phone);
-            $clientName = $name;
+            $client = $clientModel->findById($clientId);
+        }
+
+        if (!$client) {
+            echo 'Não foi possível identificar o cliente.';
+            return;
         }
 
         $serviceModel = new Service($this->pdo);
