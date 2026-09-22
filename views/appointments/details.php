@@ -5,21 +5,32 @@ $layoutContext = 'public';
 
 require __DIR__ . '/../layouts/header.php';
 
+$statusLabels = [
+    'PENDING' => 'Pendente',
+    'CONFIRMED' => 'Confirmado',
+    'COMPLETED' => 'Concluído'
+];
+
+$status = $appointment['status'];
+$statusLabel = $statusLabels[$status] ?? $status;
+
+$from = $_GET['from'] ?? '';
+
+if ($from === 'admin') {
+    $backUrl = '?action=admin-appointments';
+    $backLabel = 'Voltar para os agendamentos';
+} elseif ($from === 'search') {
+    $backUrl = '?action=search-appointments';
+    $backLabel = 'Voltar para os resultados';
+} else {
+    $backUrl = '?action=client-area';
+    $backLabel = 'Voltar para meus agendamentos';
+}
+
 ?>
 
 <main>
     <div class="container">
-
-        <?php
-        $statusLabels = [
-            'PENDING' => 'Pendente',
-            'CONFIRMED' => 'Confirmado',
-            'COMPLETED' => 'Concluído'
-        ];
-
-        $status = $appointment['status'];
-        $statusLabel = $statusLabels[$status] ?? $status;
-        ?>
 
         <div class="page-header">
             <span>Agendamento</span>
@@ -52,25 +63,33 @@ require __DIR__ . '/../layouts/header.php';
             <div class="details-grid">
 
                 <div class="detail-item">
+
                     <span>Data</span>
 
                     <strong>
                         <?= date(
                             'd/m/Y',
-                            strtotime($appointment['appointment_datetime'])
+                            strtotime(
+                                $appointment['appointment_datetime']
+                            )
                         ) ?>
                     </strong>
+
                 </div>
 
                 <div class="detail-item">
+
                     <span>Horário</span>
 
                     <strong>
                         <?= date(
                             'H:i',
-                            strtotime($appointment['appointment_datetime'])
+                            strtotime(
+                                $appointment['appointment_datetime']
+                            )
                         ) ?>
                     </strong>
+
                 </div>
 
             </div>
@@ -82,11 +101,15 @@ require __DIR__ . '/../layouts/header.php';
                 </span>
 
                 <ul>
+
                     <?php foreach ($services as $service): ?>
+
                         <li>
                             <?= htmlspecialchars($service['name']) ?>
                         </li>
+
                     <?php endforeach; ?>
+
                 </ul>
 
             </div>
@@ -113,20 +136,12 @@ require __DIR__ . '/../layouts/header.php';
                 </div>
 
             <?php endif; ?>
-            
-            <?php
-            $isAdminView = ($_GET['from'] ?? '') === 'admin';
-            ?>
 
             <a
-                href="<?= $isAdminView
-                    ? '?action=admin-appointments'
-                    : '?action=list' ?>"
+                href="<?= htmlspecialchars($backUrl) ?>"
                 class="back-link"
             >
-                ← <?= $isAdminView
-                    ? 'Voltar para os agendamentos'
-                    : 'Voltar para a consulta' ?>
+                ← <?= htmlspecialchars($backLabel) ?>
             </a>
 
         </div>

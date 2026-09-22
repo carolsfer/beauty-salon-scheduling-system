@@ -61,10 +61,17 @@ $layoutContext = $layoutContext ?? 'public';
             </a>
 
             <nav class="navigation">
-                <a href="?action=home">Início</a>
-                <a href="?action=create">Agendar</a>
-                <a href="?action=list">Consultar agendamentos</a>
-                <a href="?action=admin-login">Área da Leila</a>
+                <a href="?action=home">
+                    Início
+                </a>
+
+                <a href="?action=client-area">
+                    Área do Cliente
+                </a>
+
+                <a href="?action=admin-login">
+                    Área da Leila
+                </a>
             </nav>
 
         <?php endif; ?>

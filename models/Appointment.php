@@ -173,6 +173,22 @@ class Appointment
         return $statement->fetchAll();
     }
 
+    public function findByClient(int $clientId): array
+    {
+        $statement = $this->pdo->prepare(
+            'SELECT id, appointment_datetime, status
+            FROM appointments
+            WHERE client_id = :client_id
+            ORDER BY appointment_datetime DESC'
+        );
+
+        $statement->execute([
+            'client_id' => $clientId
+        ]);
+
+        return $statement->fetchAll();
+    }
+
     public function canBeEditedByClient(string $appointmentDatetime): bool
     {
         $appointmentDate = new DateTime($appointmentDatetime);

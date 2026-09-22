@@ -1,6 +1,6 @@
 <?php
 
-$pageTitle = 'Meus agendamentos - Cabeleleila Leila';
+$pageTitle = 'Minha área - Cabeleleila Leila';
 $layoutContext = 'public';
 
 require __DIR__ . '/../layouts/header.php';
@@ -17,50 +17,61 @@ $statusLabels = [
     <div class="container">
 
         <div class="page-header">
-            <span>Seus horários</span>
+            <span>Área do Cliente</span>
 
-            <h1>Agendamentos encontrados</h1>
+            <h1>
+                Olá, <?= htmlspecialchars($client['name']) ?>
+            </h1>
 
             <p>
-                Confira os horários encontrados entre
-                <strong>
-                    <?= date('d/m/Y', strtotime($startDate)) ?>
-                </strong>
-                e
-                <strong>
-                    <?= date('d/m/Y', strtotime($endDate)) ?>
-                </strong>.
+                Consulte seus horários ou faça um novo agendamento.
             </p>
+        </div>
+
+        <div class="actions">
+
+            <a href="?action=create" class="button">
+                Novo agendamento
+            </a>
+
+            <a
+                href="?action=list"
+                class="button button-secondary"
+            >
+                Consultar por período
+            </a>
+
+            <a
+                href="?action=client-logout"
+                class="button button-secondary"
+            >
+                Sair
+            </a>
+
         </div>
 
         <?php if (empty($appointments)): ?>
 
             <div class="card empty-state">
-
-                <h2>Nenhum agendamento encontrado</h2>
+                <h2>Você ainda não possui agendamentos</h2>
 
                 <p>
-                    Não encontramos agendamentos no período informado.
+                    Quando você agendar um horário, ele aparecerá aqui.
                 </p>
 
                 <div class="form-actions">
-
-                    <a href="?action=list" class="button">
-                        Alterar período
-                    </a>
-
-                    <a
-                        href="?action=create"
-                        class="button button-secondary"
-                    >
+                    <a href="?action=create" class="button">
                         Agendar horário
                     </a>
-
                 </div>
-
             </div>
 
         <?php else: ?>
+
+            <div class="section-heading client-area-heading">
+                <span>Seus horários</span>
+                <h2>Meus agendamentos</h2>
+            </div>
 
             <div class="appointment-list">
 
@@ -106,7 +117,7 @@ $statusLabels = [
                         <div class="appointment-actions">
 
                             <a
-                                href="?action=details&id=<?= (int) $appointment['id'] ?>&from=search"
+                                href="?action=details&id=<?= (int) $appointment['id'] ?>"
                                 class="button button-secondary"
                             >
                                 Ver detalhes
@@ -121,18 +132,6 @@ $statusLabels = [
             </div>
 
         <?php endif; ?>
-
-        <div class="details-actions">
-
-            <a href="?action=list" class="back-link">
-                ← Alterar período
-            </a>
-
-            <a href="?action=client-area" class="back-link">
-                Voltar para minha área
-            </a>
-
-        </div>
 
     </div>
 </main>

@@ -15,12 +15,92 @@ class AppointmentController
 
     public function create(): void
     {
+        $client = $this->getSessionClient();
+
+        if ($client) {
+            $serviceModel = new Service($this->pdo);
+            $services = $serviceModel->findAll();
+
+            require __DIR__ . '/../views/appointments/services.php';
+            return;
+        }
+
         require __DIR__ . '/../views/appointments/create.php';
     }
 
     public function search(): void
     {
+        $client = $this->getSessionClient();
+
+        if (!$client) {
+            header('Location: ?action=client-area');
+            exit;
+        }
+
+        $startDate = $_SESSION['appointment_search']['start_date'] ?? '';
+        $endDate = $_SESSION['appointment_search']['end_date'] ?? '';
+
         require __DIR__ . '/../views/appointments/search.php';
+    }
+
+    public function clientArea(): void
+    {
+        $client = $this->getSessionClient();
+
+        if (!$client) {
+            require __DIR__ . '/../views/client/access.php';
+            return;
+        }
+
+        $appointmentModel = new Appointment($this->pdo);
+
+        $appointments = $appointmentModel->findByClient(
+            (int) $client['id']
+        );
+
+        require __DIR__ . '/../views/client/area.php';
+    }
+
+    public function identifyClientArea(): void
+    {
+        $phone = trim($_POST['phone'] ?? '');
+
+        if ($phone === '') {
+            echo 'Informe seu telefone.';
+            return;
+        }
+
+        $clientModel = new Client($this->pdo);
+
+        $phone = $clientModel->normalizePhone($phone);
+
+        if (strlen($phone) < 10 || strlen($phone) > 11) {
+            echo 'Informe um telefone válido com DDD.';
+            return;
+        }
+
+        $client = $clientModel->findByPhone($phone);
+
+        if (!$client) {
+            echo 'Cliente não encontrado.';
+            return;
+        }
+
+        $_SESSION['client_id'] = (int) $client['id'];
+
+        header('Location: ?action=client-area');
+        exit;
+    }
+
+    public function clientLogout(): void
+    {
+        unset(
+            $_SESSION['client_id'],
+            $_SESSION['appointment_search']
+        );
+
+        header('Location: ?action=home');
+        exit;
     }
 
     public function identifyClient(): void
@@ -56,6 +136,8 @@ class AppointmentController
             return;
         }
 
+        $_SESSION['client_id'] = (int) $client['id'];
+
         $serviceModel = new Service($this->pdo);
         $services = $serviceModel->findAll();
 
@@ -69,14 +151,7 @@ class AppointmentController
         $date = trim($_POST['date'] ?? '');
         $time = trim($_POST['time'] ?? '');
 
-        if ($clientId <= 0) {
-            echo 'Cliente inválido.';
-            return;
-        }
-
-        $clientModel = new Client($this->pdo);
-
-        if (!$clientModel->findById($clientId)) {
+        if (!$this->isCurrentClient($clientId)) {
             echo 'Cliente inválido.';
             return;
         }
@@ -143,7 +218,6 @@ class AppointmentController
             header(
                 'Location: ?action=details&id=' . $appointmentId
             );
-
             exit;
         } catch (Throwable $exception) {
             if ($this->pdo->inTransaction()) {
@@ -168,19 +242,12 @@ class AppointmentController
         $choice = $_POST['choice'] ?? '';
 
         if (
-            $clientId <= 0 ||
+            !$this->isCurrentClient($clientId) ||
             empty($services) ||
             $date === '' ||
             $time === ''
         ) {
             echo 'Dados do agendamento inválidos.';
-            return;
-        }
-
-        $clientModel = new Client($this->pdo);
-
-        if (!$clientModel->findById($clientId)) {
-            echo 'Cliente inválido.';
             return;
         }
 
@@ -232,8 +299,7 @@ class AppointmentController
                 }
 
                 $appointmentId = $existingAppointmentId;
-                
-                } elseif ($choice === 'keep-date') {
+            } elseif ($choice === 'keep-date') {
                 if (!$appointmentModel->isValidDatetime($date, $time)) {
                     throw new Exception(
                         'Data e horário inválidos.'
@@ -272,7 +338,6 @@ class AppointmentController
             header(
                 'Location: ?action=details&id=' . $appointmentId
             );
-
             exit;
         } catch (Throwable $exception) {
             if ($this->pdo->inTransaction()) {
@@ -283,50 +348,29 @@ class AppointmentController
         }
     }
 
-    public function edit(): void
-    {
-        $appointmentId = (int) ($_GET['id'] ?? 0);
-
-        if ($appointmentId <= 0) {
-            echo 'Agendamento inválido.';
-            return;
-        }
-
-        $appointmentModel = new Appointment($this->pdo);
-        $appointment = $appointmentModel->findById($appointmentId);
-
-        if (!$appointment) {
-            echo 'Agendamento não encontrado.';
-            return;
-        }
-
-        if (
-            !$appointmentModel->canBeEditedByClient(
-                $appointment['appointment_datetime']
-            )
-        ) {
-            echo 'Este agendamento não pode mais ser alterado online. Entre em contato com o salão por telefone.';
-            return;
-        }
-
-        $selectedServices = $appointmentModel->findServices(
-            $appointmentId
-        );
-
-        $serviceModel = new Service($this->pdo);
-        $services = $serviceModel->findAll();
-
-        require __DIR__ . '/../views/appointments/edit.php';
-    }
-
     public function searchAppointments(): void
     {
-        $phone = trim($_POST['phone'] ?? '');
-        $startDate = trim($_POST['start_date'] ?? '');
-        $endDate = trim($_POST['end_date'] ?? '');
+        $client = $this->getSessionClient();
 
-        if ($phone === '' || $startDate === '' || $endDate === '') {
-            echo 'Preencha todos os campos.';
+        if (!$client) {
+            header('Location: ?action=client-area');
+            exit;
+        }
+
+        $startDate = trim(
+            $_POST['start_date']
+                ?? $_SESSION['appointment_search']['start_date']
+                ?? ''
+        );
+
+        $endDate = trim(
+            $_POST['end_date']
+                ?? $_SESSION['appointment_search']['end_date']
+                ?? ''
+        );
+
+        if ($startDate === '' || $endDate === '') {
+            echo 'Informe o período da consulta.';
             return;
         }
 
@@ -335,21 +379,10 @@ class AppointmentController
             return;
         }
 
-        $clientModel = new Client($this->pdo);
-
-        $phone = $clientModel->normalizePhone($phone);
-
-        if (strlen($phone) < 10 || strlen($phone) > 11) {
-            echo 'Informe um telefone válido com DDD.';
-            return;
-        }
-
-        $client = $clientModel->findByPhone($phone);
-
-        if (!$client) {
-            echo 'Cliente não encontrado.';
-            return;
-        }
+        $_SESSION['appointment_search'] = [
+            'start_date' => $startDate,
+            'end_date' => $endDate
+        ];
 
         $appointmentModel = new Appointment($this->pdo);
 
@@ -372,10 +405,20 @@ class AppointmentController
         }
 
         $appointmentModel = new Appointment($this->pdo);
-
         $appointment = $appointmentModel->findById($appointmentId);
 
         if (!$appointment) {
+            echo 'Agendamento não encontrado.';
+            return;
+        }
+
+        $isAdminView = ($_GET['from'] ?? '') === 'admin'
+            && !empty($_SESSION['admin_logged_in']);
+
+        if (
+            !$isAdminView &&
+            !$this->canAccessAppointment($appointment)
+        ) {
             echo 'Agendamento não encontrado.';
             return;
         }
@@ -389,6 +432,47 @@ class AppointmentController
         );
 
         require __DIR__ . '/../views/appointments/details.php';
+    }
+
+    public function edit(): void
+    {
+        $appointmentId = (int) ($_GET['id'] ?? 0);
+
+        if ($appointmentId <= 0) {
+            echo 'Agendamento inválido.';
+            return;
+        }
+
+        $appointmentModel = new Appointment($this->pdo);
+        $appointment = $appointmentModel->findById($appointmentId);
+
+        if (!$appointment) {
+            echo 'Agendamento não encontrado.';
+            return;
+        }
+
+        if (!$this->canAccessAppointment($appointment)) {
+            echo 'Agendamento não encontrado.';
+            return;
+        }
+
+        if (
+            !$appointmentModel->canBeEditedByClient(
+                $appointment['appointment_datetime']
+            )
+        ) {
+            echo 'Este agendamento não pode mais ser alterado online. Entre em contato com o salão por telefone.';
+            return;
+        }
+
+        $selectedServices = $appointmentModel->findServices(
+            $appointmentId
+        );
+
+        $serviceModel = new Service($this->pdo);
+        $services = $serviceModel->findAll();
+
+        require __DIR__ . '/../views/appointments/edit.php';
     }
 
     public function update(): void
@@ -442,6 +526,11 @@ class AppointmentController
             return;
         }
 
+        if (!$this->canAccessAppointment($appointment)) {
+            echo 'Agendamento não encontrado.';
+            return;
+        }
+
         if (
             !$appointmentModel->canBeEditedByClient(
                 $appointment['appointment_datetime']
@@ -473,7 +562,6 @@ class AppointmentController
             header(
                 'Location: ?action=details&id=' . $appointmentId
             );
-
             exit;
         } catch (Throwable $exception) {
             if ($this->pdo->inTransaction()) {
@@ -482,5 +570,40 @@ class AppointmentController
 
             echo 'Não foi possível alterar o agendamento.';
         }
+    }
+
+    private function getSessionClient(): ?array
+    {
+        $clientId = (int) ($_SESSION['client_id'] ?? 0);
+
+        if ($clientId <= 0) {
+            return null;
+        }
+
+        $clientModel = new Client($this->pdo);
+        $client = $clientModel->findById($clientId);
+
+        if (!$client) {
+            unset($_SESSION['client_id']);
+            return null;
+        }
+
+        return $client;
+    }
+
+    private function isCurrentClient(int $clientId): bool
+    {
+        $sessionClient = $this->getSessionClient();
+
+        return $sessionClient !== null
+            && (int) $sessionClient['id'] === $clientId;
+    }
+
+    private function canAccessAppointment(array $appointment): bool
+    {
+        $clientId = (int) ($_SESSION['client_id'] ?? 0);
+
+        return $clientId > 0
+            && (int) $appointment['client_id'] === $clientId;
     }
 }

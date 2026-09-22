@@ -11,12 +11,13 @@ require __DIR__ . '/../layouts/header.php';
     <div class="container">
 
         <div class="page-header">
-            <span>Seus horários</span>
+            <span>Meus agendamentos</span>
 
-            <h1>Consultar agendamentos</h1>
+            <h1>Consultar por período</h1>
 
             <p>
-                Informe seu telefone e o período que deseja consultar.
+                Escolha o período que deseja consultar,
+                <?= htmlspecialchars($client['name']) ?>.
             </p>
         </div>
 
@@ -25,23 +26,6 @@ require __DIR__ . '/../layouts/header.php';
             action="?action=search-appointments"
             class="card form-card"
         >
-
-            <div class="form-group">
-                <label for="phone">Telefone</label>
-
-                <input
-                    type="tel"
-                    id="phone"
-                    name="phone"
-                    autocomplete="tel"
-                    placeholder="(14) 99999-9999"
-                    required
-                >
-
-                <span class="form-help">
-                    Use o mesmo telefone informado no agendamento.
-                </span>
-            </div>
 
             <div class="date-time-grid">
 
@@ -54,6 +38,7 @@ require __DIR__ . '/../layouts/header.php';
                         type="date"
                         id="start_date"
                         name="start_date"
+                        value="<?= htmlspecialchars($startDate) ?>"
                         required
                     >
                 </div>
@@ -67,6 +52,7 @@ require __DIR__ . '/../layouts/header.php';
                         type="date"
                         id="end_date"
                         name="end_date"
+                        value="<?= htmlspecialchars($endDate) ?>"
                         required
                     >
                 </div>
@@ -81,8 +67,8 @@ require __DIR__ . '/../layouts/header.php';
 
         </form>
 
-        <a href="?action=home" class="back-link">
-            ← Voltar para o início
+        <a href="?action=client-area" class="back-link">
+            ← Voltar para minha área
         </a>
 
     </div>

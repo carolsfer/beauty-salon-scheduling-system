@@ -382,6 +382,10 @@ main {
 
 /* Appointments */
 
+.client-area-heading {
+    margin-top: 40px;
+}
+
 /* Same-week suggestion */
 
 .suggestion-card {

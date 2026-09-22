@@ -57,6 +57,21 @@ switch ($action) {
         break;
 
 
+    // Client area
+
+    case 'client-area':
+        $appointmentController->clientArea();
+        break;
+
+    case 'client-identify':
+        $appointmentController->identifyClientArea();
+        break;
+
+    case 'client-logout':
+        $appointmentController->clientLogout();
+        break;
+
+
     // Admin authentication
 
     case 'admin-login':
