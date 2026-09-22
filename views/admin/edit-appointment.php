@@ -39,7 +39,7 @@
         <form
             method="POST"
             action="?action=admin-update"
-            class="form-card"
+            class="card form-card"
         >
             <input
                 type="hidden"

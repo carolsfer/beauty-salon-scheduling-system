@@ -46,7 +46,7 @@
         <form
             method="POST"
             action="?action=identify-client"
-            class="form-card"
+            class="card form-card"
         >
 
             <div class="form-group">

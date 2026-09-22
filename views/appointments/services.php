@@ -46,7 +46,7 @@
         <form
             method="POST"
             action="?action=schedule"
-            class="form-card"
+            class="card form-card"
         >
 
             <input

@@ -46,7 +46,7 @@
         <form
             method="POST"
             action="?action=update"
-            class="form-card"
+            class="card form-card"
         >
 
             <input

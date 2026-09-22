@@ -43,7 +43,7 @@
             </p>
         </div>
 
-        <div class="suggestion-card">
+        <div class="card suggestion-card">
 
             <div class="existing-appointment">
                 <span>Agendamento existente</span>

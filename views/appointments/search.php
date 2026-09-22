@@ -45,7 +45,7 @@
         <form
             method="POST"
             action="?action=search-appointments"
-            class="form-card"
+            class="card form-card"
         >
 
             <div class="form-group">

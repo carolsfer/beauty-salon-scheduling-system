@@ -91,7 +91,8 @@ main {
     margin-bottom: 32px;
 }
 
-.page-header span {
+.page-header span,
+.section-heading span {
     color: var(--color-primary);
     font-size: 0.9rem;
     font-weight: 700;
@@ -111,12 +112,6 @@ main {
     margin-bottom: 24px;
 }
 
-.section-heading span {
-    color: var(--color-primary);
-    font-size: 0.9rem;
-    font-weight: 700;
-}
-
 .section-heading h2 {
     margin: 6px 0 0;
     font-size: 1.8rem;
@@ -125,7 +120,9 @@ main {
 
 /* Buttons and actions */
 
-.actions {
+.actions,
+.form-actions,
+.suggestion-actions {
     display: flex;
     flex-wrap: wrap;
     gap: 12px;
@@ -167,10 +164,16 @@ main {
 }
 
 .form-actions {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 12px;
     margin-top: 28px;
+}
+
+
+/* Cards */
+
+.card {
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius);
+    background: var(--color-surface);
 }
 
 
@@ -179,9 +182,6 @@ main {
 .form-card {
     max-width: 720px;
     padding: 32px;
-    border: 1px solid var(--color-border);
-    border-radius: var(--border-radius);
-    background: var(--color-surface);
 }
 
 .form-group {
@@ -207,7 +207,8 @@ main {
 }
 
 .form-group input:focus,
-.form-group select:focus {
+.form-group select:focus,
+.admin-status-select:focus {
     outline: 2px solid rgba(139, 58, 98, 0.15);
     border-color: var(--color-primary);
 }
@@ -319,21 +320,11 @@ main {
 }
 
 
-/* Cards and common components */
-
-.card {
-    padding: 24px;
-    border: 1px solid var(--color-border);
-    border-radius: var(--border-radius);
-    background: var(--color-surface);
-}
+/* Common components */
 
 .empty-state {
     max-width: 720px;
     padding: 32px;
-    border: 1px solid var(--color-border);
-    border-radius: var(--border-radius);
-    background: var(--color-surface);
 }
 
 .empty-state h2 {
@@ -377,9 +368,6 @@ main {
 
 .service-card {
     padding: 24px;
-    border: 1px solid var(--color-border);
-    border-radius: var(--border-radius);
-    background: var(--color-surface);
 }
 
 .service-card h3 {
@@ -399,9 +387,6 @@ main {
 .suggestion-card {
     max-width: 720px;
     padding: 32px;
-    border: 1px solid var(--color-border);
-    border-radius: var(--border-radius);
-    background: var(--color-surface);
 }
 
 .existing-appointment {
@@ -429,12 +414,6 @@ main {
     color: var(--color-text-light);
 }
 
-.suggestion-actions {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 12px;
-}
-
 
 /* Appointment list */
 
@@ -450,9 +429,6 @@ main {
     align-items: center;
     gap: 24px;
     padding: 20px 22px;
-    border: 1px solid var(--color-border);
-    border-radius: var(--border-radius);
-    background: var(--color-surface);
 }
 
 .appointment-date {
@@ -481,9 +457,6 @@ main {
 .details-card {
     max-width: 720px;
     padding: 32px;
-    border: 1px solid var(--color-border);
-    border-radius: var(--border-radius);
-    background: var(--color-surface);
 }
 
 .details-header {
@@ -605,11 +578,6 @@ main {
     font: inherit;
 }
 
-.admin-status-select:focus {
-    outline: 2px solid rgba(139, 58, 98, 0.15);
-    border-color: var(--color-primary);
-}
-
 .table-actions {
     display: flex;
     align-items: center;
@@ -654,9 +622,6 @@ main {
     flex-direction: column;
     gap: 4px;
     padding: 14px 18px;
-    border: 1px solid var(--color-border);
-    border-radius: var(--border-radius);
-    background: var(--color-surface);
 }
 
 .week-period span {
@@ -708,9 +673,6 @@ main {
     display: flex;
     flex-direction: column;
     padding: 22px;
-    border: 1px solid var(--color-border);
-    border-radius: var(--border-radius);
-    background: var(--color-surface);
 }
 
 .metric-card-primary {
@@ -724,14 +686,19 @@ main {
     font-weight: 600;
 }
 
-.metric-value {
-    margin: 12px 0;
+.metric-value,
+.service-performance-value {
     color: var(--color-text);
     font-size: 2.4rem;
     line-height: 1;
 }
 
-.metric-card-primary .metric-value {
+.metric-value {
+    margin: 12px 0;
+}
+
+.metric-card-primary .metric-value,
+.service-performance-value {
     color: var(--color-primary);
 }
 
@@ -747,9 +714,6 @@ main {
     align-items: center;
     gap: 32px;
     padding: 24px;
-    border: 1px solid var(--color-border);
-    border-radius: var(--border-radius);
-    background: var(--color-surface);
 }
 
 .service-performance-card > div {
@@ -760,9 +724,6 @@ main {
 
 .service-performance-value {
     margin-top: 8px;
-    color: var(--color-primary);
-    font-size: 2.4rem;
-    line-height: 1;
 }
 
 .service-performance-card p {
@@ -827,25 +788,33 @@ main {
         font-size: 1.8rem;
     }
 
-    .form-card {
+    .form-card,
+    .suggestion-card,
+    .details-card {
         padding: 22px;
+    }
+
+    .date-time-grid,
+    .details-grid {
+        grid-template-columns: 1fr;
     }
 
     .date-time-grid {
-        grid-template-columns: 1fr;
         gap: 0;
-    }
-
-    .suggestion-card {
-        padding: 22px;
     }
 
     .suggestion-actions {
         flex-direction: column;
     }
 
-    .suggestion-actions .button {
+    .suggestion-actions .button,
+    .appointment-actions .button,
+    .admin-save-actions .button {
         width: 100%;
+    }
+
+    .suggestion-actions .button,
+    .appointment-actions .button {
         text-align: center;
     }
 
@@ -854,30 +823,13 @@ main {
         gap: 14px;
     }
 
-    .appointment-actions .button {
-        width: 100%;
-        text-align: center;
-    }
-
-    .details-card {
-        padding: 22px;
-    }
-
     .details-header {
         flex-direction: column;
-    }
-
-    .details-grid {
-        grid-template-columns: 1fr;
     }
 
     .admin-save-actions {
         align-items: stretch;
         flex-direction: column;
-    }
-
-    .admin-save-actions .button {
-        width: 100%;
     }
 
     .admin-dashboard-header {

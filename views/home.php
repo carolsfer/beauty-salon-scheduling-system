@@ -47,7 +47,7 @@ require __DIR__ . '/layouts/header.php';
 
             <div class="service-grid">
 
-                <article class="service-card">
+                <article class="card service-card">
                     <h3>Cabelos</h3>
                     <p>
                         Cuidados para deixar suas madeixas
@@ -55,7 +55,7 @@ require __DIR__ . '/layouts/header.php';
                     </p>
                 </article>
 
-                <article class="service-card">
+                <article class="card service-card">
                     <h3>Unhas</h3>
                     <p>
                         Manicure e pedicure para completar
@@ -63,7 +63,7 @@ require __DIR__ . '/layouts/header.php';
                     </p>
                 </article>
 
-                <article class="service-card">
+                <article class="card service-card">
                     <h3>Hidratação</h3>
                     <p>
                         Tratamentos para cuidar e renovar

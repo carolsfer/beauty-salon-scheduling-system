@@ -39,7 +39,7 @@
                 </p>
             </div>
 
-            <div class="week-period">
+            <div class="card week-period">
                 <span>Período analisado</span>
 
                 <strong>
@@ -67,7 +67,7 @@
 
             <div class="dashboard-grid">
 
-                <article class="metric-card metric-card-primary">
+                <article class="card metric-card metric-card-primary">
                     <span class="metric-label">
                         Total de agendamentos
                     </span>
@@ -81,7 +81,7 @@
                     </span>
                 </article>
 
-                <article class="metric-card">
+                <article class="card metric-card">
                     <span class="metric-label">
                         Pendentes
                     </span>
@@ -95,7 +95,7 @@
                     </span>
                 </article>
 
-                <article class="metric-card">
+                <article class="card metric-card">
                     <span class="metric-label">
                         Confirmados
                     </span>
@@ -109,7 +109,7 @@
                     </span>
                 </article>
 
-                <article class="metric-card">
+                <article class="card metric-card">
                     <span class="metric-label">
                         Concluídos
                     </span>
@@ -134,7 +134,7 @@
                 </div>
             </div>
 
-            <div class="service-performance-card">
+            <div class="card service-performance-card">
                 <div>
                     <span class="metric-label">
                         Serviços concluídos

@@ -53,7 +53,7 @@
             </p>
         </div>
 
-        <section class="details-card">
+        <section class="card details-card">
 
             <div class="details-header">
 

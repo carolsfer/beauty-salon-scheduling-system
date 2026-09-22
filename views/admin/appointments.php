@@ -39,7 +39,7 @@
 
         <?php if (empty($appointments)): ?>
 
-            <div class="empty-state">
+            <div class="card empty-state">
                 <h2>Nenhum agendamento encontrado</h2>
 
                 <p>
