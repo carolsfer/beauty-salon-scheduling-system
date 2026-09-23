@@ -64,25 +64,35 @@ class AppointmentController
     public function identifyClientArea(): void
     {
         $phone = trim($_POST['phone'] ?? '');
+        $phoneError = '';
 
         if ($phone === '') {
-            echo 'Informe seu telefone.';
+            $phoneError = 'Informe seu telefone.';
+
+            require __DIR__ . '/../views/client/access.php';
             return;
         }
 
         $clientModel = new Client($this->pdo);
 
-        $phone = $clientModel->normalizePhone($phone);
+        $normalizedPhone = $clientModel->normalizePhone($phone);
 
-        if (strlen($phone) < 10 || strlen($phone) > 11) {
-            echo 'Informe um telefone válido com DDD.';
+        if (
+            strlen($normalizedPhone) < 10 ||
+            strlen($normalizedPhone) > 11
+        ) {
+            $phoneError = 'Informe um telefone válido com DDD.';
+
+            require __DIR__ . '/../views/client/access.php';
             return;
         }
 
-        $client = $clientModel->findByPhone($phone);
+        $client = $clientModel->findByPhone($normalizedPhone);
 
         if (!$client) {
-            echo 'Cliente não encontrado.';
+            $phoneError = 'Não encontramos agendamentos com este telefone.';
+
+            require __DIR__ . '/../views/client/access.php';
             return;
         }
 
@@ -109,25 +119,36 @@ class AppointmentController
         $phone = trim($_POST['phone'] ?? '');
 
         if ($name === '' || $phone === '') {
-            echo 'Nome e telefone são obrigatórios.';
+            $formError = 'Informe seu nome e telefone.';
+
+            require __DIR__ . '/../views/appointments/create.php';
             return;
         }
 
         $clientModel = new Client($this->pdo);
 
-        $phone = $clientModel->normalizePhone($phone);
+        $normalizedPhone = $clientModel->normalizePhone($phone);
 
-        if (strlen($phone) < 10 || strlen($phone) > 11) {
-            echo 'Informe um telefone válido com DDD.';
+        if (
+            strlen($normalizedPhone) < 10 ||
+            strlen($normalizedPhone) > 11
+        ) {
+            $phoneError = 'Informe um telefone válido com DDD.';
+
+            require __DIR__ . '/../views/appointments/create.php';
             return;
         }
 
-        $client = $clientModel->findByPhone($phone);
+        $client = $clientModel->findByPhone($normalizedPhone);
 
         if ($client) {
             $clientId = (int) $client['id'];
         } else {
-            $clientId = $clientModel->create($name, $phone);
+            $clientId = $clientModel->create(
+                $name,
+                $normalizedPhone
+            );
+
             $client = $clientModel->findById($clientId);
         }
 
@@ -143,7 +164,6 @@ class AppointmentController
 
         require __DIR__ . '/../views/appointments/services.php';
     }
-
     public function schedule(): void
     {
         $clientId = (int) ($_POST['client_id'] ?? 0);
@@ -370,12 +390,17 @@ class AppointmentController
         );
 
         if ($startDate === '' || $endDate === '') {
-            echo 'Informe o período da consulta.';
+            $periodError = 'Informe o período da consulta.';
+
+            require __DIR__ . '/../views/appointments/search.php';
             return;
         }
 
         if ($startDate > $endDate) {
-            echo 'A data inicial não pode ser posterior à data final.';
+            $periodError =
+                'A data inicial não pode ser posterior à data final.';
+
+            require __DIR__ . '/../views/appointments/search.php';
             return;
         }
 

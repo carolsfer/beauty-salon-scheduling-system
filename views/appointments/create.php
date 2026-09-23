@@ -34,6 +34,7 @@ require __DIR__ . '/../layouts/header.php';
                     type="text"
                     id="name"
                     name="name"
+                    value="<?= htmlspecialchars($name ?? '') ?>"
                     required
                     autocomplete="name"
                     placeholder="Digite seu nome"
@@ -47,10 +48,18 @@ require __DIR__ . '/../layouts/header.php';
                     type="tel"
                     id="phone"
                     name="phone"
+                    value="<?= htmlspecialchars($phone ?? '') ?>"
+                    class="<?= !empty($phoneError) ? 'input-error' : '' ?>"
                     required
                     autocomplete="tel"
                     placeholder="(14) 99999-9999"
                 >
+                
+                <?php if (!empty($phoneError)): ?>
+                    <span class="field-error">
+                        <?= htmlspecialchars($phoneError) ?>
+                    </span>
+                <?php endif; ?>
 
                 <span class="form-help">
                     Usaremos seu telefone para localizar seus agendamentos.

@@ -59,6 +59,12 @@ require __DIR__ . '/../layouts/header.php';
 
             </div>
 
+            <?php if (!empty($periodError)): ?>
+                <span class="field-error">
+                    <?= htmlspecialchars($periodError) ?>
+                </span>
+            <?php endif; ?>
+
             <div class="form-actions">
                 <button type="submit" class="button">
                     Buscar agendamentos

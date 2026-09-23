@@ -35,8 +35,16 @@ require __DIR__ . '/../layouts/header.php';
                     name="phone"
                     autocomplete="tel"
                     placeholder="(14) 99999-9999"
+                    value="<?= htmlspecialchars($phone ?? '') ?>"
+                    class="<?= !empty($phoneError) ? 'input-error' : '' ?>"
                     required
                 >
+
+                <?php if (!empty($phoneError)): ?>
+                    <span class="field-error">
+                        <?= htmlspecialchars($phoneError) ?>
+                    </span>
+                <?php endif; ?>
 
                 <span class="form-help">
                     Use o mesmo telefone informado ao agendar.
