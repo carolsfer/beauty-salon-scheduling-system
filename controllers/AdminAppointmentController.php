@@ -49,9 +49,9 @@ class AdminAppointmentController
             $appointmentId
         );
 
-        $selectedServiceIds = array_column(
-            $appointmentServices,
-            'id'
+        $selectedServiceIds = array_map(
+            'intval',
+            array_column($appointmentServices, 'id')
         );
 
         require __DIR__ . '/../views/admin/edit-appointment.php';
@@ -62,22 +62,9 @@ class AdminAppointmentController
         $this->requireAdmin();
 
         $appointmentId = (int) ($_POST['appointment_id'] ?? 0);
-        $services = $_POST['services'] ?? [];
-        $date = trim($_POST['date'] ?? '');
-        $time = trim($_POST['time'] ?? '');
 
         if ($appointmentId <= 0) {
             echo 'Agendamento inválido.';
-            return;
-        }
-
-        if (empty($services)) {
-            echo 'Selecione pelo menos um serviço.';
-            return;
-        }
-
-        if ($date === '' || $time === '') {
-            echo 'Data e horário são obrigatórios.';
             return;
         }
 
@@ -89,22 +76,56 @@ class AdminAppointmentController
             return;
         }
 
+        $selectedServices = $_POST['services'] ?? [];
+        $date = trim($_POST['date'] ?? '');
+        $time = trim($_POST['time'] ?? '');
+
+        $serviceModel = new Service($this->pdo);
+        $services = $serviceModel->findAll();
+
+        $selectedServiceIds = array_map(
+            'intval',
+            $selectedServices
+        );
+
+        if (empty($selectedServices)) {
+            $formError = 'Selecione pelo menos um serviço.';
+
+            require __DIR__ . '/../views/admin/edit-appointment.php';
+            return;
+        }
+
+        if ($date === '' || $time === '') {
+            $formError = 'Data e horário são obrigatórios.';
+
+            require __DIR__ . '/../views/admin/edit-appointment.php';
+            return;
+        }
+
         if (!$appointmentModel->isValidDatetime($date, $time)) {
-            echo 'Data ou horário inválido.';
+            $formError = 'Data ou horário inválido.';
+
+            require __DIR__ . '/../views/admin/edit-appointment.php';
             return;
         }
 
         $appointmentDatetime = $date . ' ' . $time . ':00';
 
-        if (!$appointmentModel->isDatetimeInFuture($appointmentDatetime)) {
-            echo 'A data e o horário do agendamento devem ser futuros.';
+        if (!$appointmentModel->isDatetimeInFuture(
+            $appointmentDatetime
+        )) {
+            $formError =
+                'A data e o horário do agendamento devem ser futuros.';
+
+            require __DIR__ . '/../views/admin/edit-appointment.php';
             return;
         }
 
-        $serviceModel = new Service($this->pdo);
-        $services = $serviceModel->validateIds($services);
+        $validatedServices = $serviceModel->validateIds(
+            $selectedServices
+        );
 
-        if ($services === null) {
+        if ($validatedServices === null) {
             echo 'Um dos serviços selecionados é inválido.';
             return;
         }
@@ -119,7 +140,7 @@ class AdminAppointmentController
 
             $appointmentModel->removeServices($appointmentId);
 
-            foreach ($services as $serviceId) {
+            foreach ($validatedServices as $serviceId) {
                 $appointmentModel->addService(
                     $appointmentId,
                     $serviceId

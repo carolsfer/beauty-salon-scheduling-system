@@ -1,3 +1,24 @@
+<?php
+
+$selectedServiceIds = array_map(
+    'intval',
+    $selectedServiceIds ?? []
+);
+
+$submittedDate = $date
+    ?? date(
+        'Y-m-d',
+        strtotime($appointment['appointment_datetime'])
+    );
+
+$submittedTime = $time
+    ?? date(
+        'H:i',
+        strtotime($appointment['appointment_datetime'])
+    );
+
+?>
+
 <form
     method="POST"
     action="<?= htmlspecialchars($formAction) ?>"
@@ -17,6 +38,14 @@
         </strong>
     </div>
 
+    <?php if (!empty($formError)): ?>
+
+        <div class="message message-error">
+            <?= htmlspecialchars($formError) ?>
+        </div>
+
+    <?php endif; ?>
+
     <div class="form-group">
         <span class="form-label">
             Serviços
@@ -26,18 +55,23 @@
 
             <?php foreach ($services as $service): ?>
 
+                <?php
+                $serviceId = (int) $service['id'];
+                ?>
+
                 <label
                     class="checkbox-option"
-                    for="service-<?= (int) $service['id'] ?>"
+                    for="service-<?= $serviceId ?>"
                 >
                     <input
                         type="checkbox"
-                        id="service-<?= (int) $service['id'] ?>"
+                        id="service-<?= $serviceId ?>"
                         name="services[]"
-                        value="<?= (int) $service['id'] ?>"
+                        value="<?= $serviceId ?>"
                         <?= in_array(
-                            $service['id'],
-                            $selectedServiceIds
+                            $serviceId,
+                            $selectedServiceIds,
+                            true
                         ) ? 'checked' : '' ?>
                     >
 
@@ -66,11 +100,7 @@
                 type="date"
                 id="date"
                 name="date"
-                min="<?= date('Y-m-d') ?>"
-                value="<?= date(
-                    'Y-m-d',
-                    strtotime($appointment['appointment_datetime'])
-                ) ?>"
+                value="<?= htmlspecialchars($submittedDate) ?>"
                 required
             >
         </div>
@@ -84,10 +114,7 @@
                 type="time"
                 id="time"
                 name="time"
-                value="<?= date(
-                    'H:i',
-                    strtotime($appointment['appointment_datetime'])
-                ) ?>"
+                value="<?= htmlspecialchars($submittedTime) ?>"
                 required
             >
         </div>

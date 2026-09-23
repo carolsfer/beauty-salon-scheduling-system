@@ -5,6 +5,11 @@ $layoutContext = 'public';
 
 require __DIR__ . '/../layouts/header.php';
 
+$selectedServices = array_map(
+    'intval',
+    $selectedServices ?? []
+);
+
 ?>
 
 <main>
@@ -41,6 +46,14 @@ require __DIR__ . '/../layouts/header.php';
                 </strong>
             </div>
 
+            <?php if (!empty($formError)): ?>
+
+                <div class="message message-error">
+                    <?= htmlspecialchars($formError) ?>
+                </div>
+
+            <?php endif; ?>
+
             <div class="form-group">
                 <span class="form-label">
                     Serviços
@@ -50,12 +63,21 @@ require __DIR__ . '/../layouts/header.php';
 
                     <?php foreach ($services as $service): ?>
 
+                        <?php
+                        $serviceId = (int) $service['id'];
+                        ?>
+
                         <label class="checkbox-option">
 
                             <input
                                 type="checkbox"
                                 name="services[]"
-                                value="<?= (int) $service['id'] ?>"
+                                value="<?= $serviceId ?>"
+                                <?= in_array(
+                                    $serviceId,
+                                    $selectedServices,
+                                    true
+                                ) ? 'checked' : '' ?>
                             >
 
                             <span>
@@ -80,7 +102,7 @@ require __DIR__ . '/../layouts/header.php';
                         type="date"
                         id="date"
                         name="date"
-                        min="<?= date('Y-m-d') ?>"
+                        value="<?= htmlspecialchars($date ?? '') ?>"
                         required
                     >
                 </div>
@@ -94,6 +116,7 @@ require __DIR__ . '/../layouts/header.php';
                         type="time"
                         id="time"
                         name="time"
+                        value="<?= htmlspecialchars($time ?? '') ?>"
                         required
                     >
                 </div>
