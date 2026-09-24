@@ -135,7 +135,7 @@ $selectedServices = array_map(
 
         </form>
 
-        <a href="?action=create" class="back-link">
+        <a href="?action=client-area" class="back-link">
             ← Voltar
         </a>
 

@@ -31,7 +31,7 @@ require __DIR__ . '/../layouts/header.php';
                     <?= date(
                         'd/m/Y',
                         strtotime(
-                            $existingAppointment['appointment_datetime']
+                            $appointment['appointment_datetime']
                         )
                     ) ?>
 
@@ -40,7 +40,7 @@ require __DIR__ . '/../layouts/header.php';
                     <?= date(
                         'H:i',
                         strtotime(
-                            $existingAppointment['appointment_datetime']
+                            $appointment['appointment_datetime']
                         )
                     ) ?>
                 </strong>
@@ -57,54 +57,12 @@ require __DIR__ . '/../layouts/header.php';
                 action="?action=confirm-schedule"
             >
 
-                <input
-                    type="hidden"
-                    name="client_id"
-                    value="<?= (int) $clientId ?>"
-                >
-
-                <input
-                    type="hidden"
-                    name="date"
-                    value="<?= htmlspecialchars($date) ?>"
-                >
-
-                <input
-                    type="hidden"
-                    name="time"
-                    value="<?= htmlspecialchars($time) ?>"
-                >
-
-                <input
-                    type="hidden"
-                    name="existing_datetime"
-                    value="<?= htmlspecialchars(
-                        $existingAppointment['appointment_datetime']
-                    ) ?>"
-                >
-
-                <?php foreach ($services as $serviceId): ?>
-
-                    <input
-                        type="hidden"
-                        name="services[]"
-                        value="<?= (int) $serviceId ?>"
-                    >
-
-                <?php endforeach; ?>
-
-                <input
-                    type="hidden"
-                    name="existing_appointment_id"
-                    value="<?= (int) $existingAppointment['id'] ?>"
-                >
-
                 <div class="suggestion-actions">
 
                     <button
                         type="submit"
-                        name="choice"
-                        value="same-date"
+                        name="use_existing_appointment"
+                        value="1"
                         class="button"
                     >
                         Adicionar ao agendamento existente
@@ -112,8 +70,8 @@ require __DIR__ . '/../layouts/header.php';
 
                     <button
                         type="submit"
-                        name="choice"
-                        value="keep-date"
+                        name="use_existing_appointment"
+                        value="0"
                         class="button button-secondary"
                     >
                         Manter novo agendamento
