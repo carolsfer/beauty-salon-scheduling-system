@@ -1,9 +1,21 @@
 <footer class="site-footer">
     <div class="container">
         <?php if (($layoutContext ?? 'public') === 'admin'): ?>
-            Cabeleleila Leila — Área administrativa
+
+            <p>
+                Cabeleleila Leila — Área administrativa
+            </p>
+
         <?php else: ?>
-            Cabeleleila Leila — Agendamento simples e rápido
+
+            <p>
+                Cabeleleila Leila — Sistema de agendamento
+            </p>
+
+            <p>
+                Rua Baker, 221B · (00) 0000-0221
+            </p>
+
         <?php endif; ?>
     </div>
 </footer>

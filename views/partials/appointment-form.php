@@ -83,10 +83,6 @@ $submittedTime = $time
             <?php endforeach; ?>
 
         </div>
-
-        <span class="form-help">
-            Selecione pelo menos um serviço.
-        </span>
     </div>
 
     <div class="date-time-grid">

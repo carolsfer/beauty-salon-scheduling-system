@@ -1,6 +1,6 @@
 <?php
 
-$pageTitle = 'Minha área - Cabeleleila Leila';
+$pageTitle = 'Área do Cliente - Cabeleleila Leila';
 $layoutContext = 'public';
 
 require __DIR__ . '/../layouts/header.php';
@@ -24,7 +24,8 @@ $statusLabels = [
             </h1>
 
             <p>
-                Consulte seus horários ou faça um novo agendamento.
+                Acompanhe seus agendamentos e consulte
+                os detalhes de cada atendimento.
             </p>
         </div>
 
@@ -38,7 +39,7 @@ $statusLabels = [
                 href="?action=list"
                 class="button button-secondary"
             >
-                Consultar por período
+                Consultar período
             </a>
 
             <a
@@ -53,15 +54,16 @@ $statusLabels = [
         <?php if (empty($appointments)): ?>
 
             <div class="card empty-state">
-                <h2>Você ainda não possui agendamentos</h2>
+                <h2>Nenhum agendamento por enquanto</h2>
 
                 <p>
-                    Quando você agendar um horário, ele aparecerá aqui.
+                    Seus próximos atendimentos e agendamentos
+                    anteriores serão exibidos aqui.
                 </p>
 
                 <div class="form-actions">
                     <a href="?action=create" class="button">
-                        Agendar horário
+                        Novo agendamento
                     </a>
                 </div>
             </div>
@@ -69,8 +71,8 @@ $statusLabels = [
         <?php else: ?>
 
             <div class="section-heading client-area-heading">
-                <span>Seus horários</span>
-                <h2>Meus agendamentos</h2>
+                <span>Histórico</span>
+                <h2>Seus agendamentos</h2>
             </div>
 
             <div class="appointment-list">

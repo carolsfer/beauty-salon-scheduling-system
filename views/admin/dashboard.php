@@ -1,6 +1,6 @@
 <?php
 
-$pageTitle = 'Desempenho semanal - Cabeleleila Leila';
+$pageTitle = 'Resumo semanal - Cabeleleila Leila';
 $layoutContext = 'admin';
 
 require __DIR__ . '/../layouts/header.php';
@@ -12,17 +12,17 @@ require __DIR__ . '/../layouts/header.php';
 
         <div class="admin-dashboard-header">
             <div class="page-header">
-                <span>Visão geral</span>
-                <h1>Desempenho semanal</h1>
+                <span>Área da Leila</span>
+                <h1>Resumo semanal</h1>
 
                 <p>
-                    Acompanhe os agendamentos e serviços realizados
+                    Consulte os agendamentos e serviços concluídos
                     no período selecionado.
                 </p>
             </div>
 
             <div class="card week-period">
-                <span>Período analisado</span>
+                <span>Período</span>
 
                 <strong>
                     <?= $weekStart->format('d/m/Y') ?>
@@ -59,14 +59,14 @@ require __DIR__ . '/../layouts/header.php';
             <div class="dashboard-section-heading">
                 <div>
                     <span>Agendamentos</span>
-                    <h2>Resumo da semana</h2>
+                    <h2>Agendamentos da semana</h2>
                 </div>
 
                 <a
                     href="?action=admin-appointments"
                     class="dashboard-link"
                 >
-                    Gerenciar agendamentos →
+                    Ver agendamentos →
                 </a>
             </div>
 
@@ -74,7 +74,7 @@ require __DIR__ . '/../layouts/header.php';
 
                 <article class="card metric-card metric-card-primary">
                     <span class="metric-label">
-                        Total de agendamentos
+                        Total
                     </span>
 
                     <strong class="metric-value">
@@ -82,7 +82,7 @@ require __DIR__ . '/../layouts/header.php';
                     </strong>
 
                     <span class="metric-description">
-                        Agendamentos registrados nesta semana
+                        Agendamentos registrados
                     </span>
                 </article>
 
@@ -110,7 +110,7 @@ require __DIR__ . '/../layouts/header.php';
                     </strong>
 
                     <span class="metric-description">
-                        Horários confirmados
+                        Agendamentos confirmados
                     </span>
                 </article>
 
@@ -135,7 +135,7 @@ require __DIR__ . '/../layouts/header.php';
             <div class="dashboard-section-heading">
                 <div>
                     <span>Serviços</span>
-                    <h2>Serviços realizados</h2>
+                    <h2>Serviços concluídos</h2>
                 </div>
             </div>
 
@@ -143,7 +143,7 @@ require __DIR__ . '/../layouts/header.php';
 
                 <div class="service-performance-total">
                     <span class="metric-label">
-                        Serviços concluídos
+                        Total de serviços
                     </span>
 
                     <strong class="service-performance-value">
@@ -151,8 +151,8 @@ require __DIR__ . '/../layouts/header.php';
                     </strong>
 
                     <p>
-                        Total de serviços realizados nos atendimentos
-                        concluídos nesta semana.
+                        Serviços realizados nos atendimentos
+                        concluídos durante o período.
                     </p>
                 </div>
 
@@ -164,7 +164,7 @@ require __DIR__ . '/../layouts/header.php';
                     <?php if (empty($completedServicesByType)): ?>
 
                         <p class="service-breakdown-empty">
-                            Nenhum serviço concluído nesta semana.
+                            Nenhum serviço foi concluído neste período.
                         </p>
 
                     <?php else: ?>

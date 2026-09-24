@@ -15,23 +15,25 @@ require __DIR__ . '/layouts/header.php';
             <p>Salão de beleza</p>
 
             <h1>
-                Seu momento de cuidado começa aqui!
+                Agende seu atendimento
             </h1>
 
             <p>
-                Agende seus serviços de forma simples e acompanhe
-                seus horários sem precisar sair de casa.
+                Escolha os serviços, a data e o horário
+                da sua próxima visita ao salão.
             </p>
 
             <div class="actions">
 
                 <a href="?action=create" class="button">
-                    Agendar horário
+                    Novo agendamento
                 </a>
 
-                <a href="?action=list"
-                   class="button button-secondary">
-                    Consultar agendamentos
+                <a
+                    href="?action=list"
+                    class="button button-secondary"
+                >
+                    Área do Cliente
                 </a>
 
             </div>
@@ -41,8 +43,8 @@ require __DIR__ . '/layouts/header.php';
         <section class="services-section">
 
             <div class="section-heading">
-                <span>Nossos serviços</span>
-                <h2>Escolha como você quer se cuidar</h2>
+                <span>Serviços disponíveis</span>
+                <h2>Serviços do salão</h2>
             </div>
 
             <div class="service-grid">
@@ -50,24 +52,24 @@ require __DIR__ . '/layouts/header.php';
                 <article class="card service-card">
                     <h3>Cabelos</h3>
                     <p>
-                        Cuidados para deixar suas madeixas
-                        do jeito que você gosta.
+                        Serviços de corte e finalização
+                        dos cabelos.
                     </p>
                 </article>
 
                 <article class="card service-card">
                     <h3>Unhas</h3>
                     <p>
-                        Manicure e pedicure para completar
-                        o seu momento de cuidado.
+                        Manicure e pedicure disponíveis
+                        para agendamento.
                     </p>
                 </article>
 
                 <article class="card service-card">
                     <h3>Hidratação</h3>
                     <p>
-                        Tratamentos para cuidar e renovar
-                        seus cabelos.
+                        Tratamento de hidratação
+                        para os cabelos.
                     </p>
                 </article>
 

@@ -16,8 +16,9 @@ require __DIR__ . '/../layouts/header.php';
             <h1>Você já tem um horário nesta semana</h1>
 
             <p>
-                Encontramos outro agendamento seu próximo
-                da data escolhida.
+                Encontramos outro agendamento seu nesta semana.
+                Se preferir, você pode incluir os novos serviços
+                nessa mesma visita.
             </p>
         </div>
 
@@ -46,10 +47,9 @@ require __DIR__ . '/../layouts/header.php';
             </div>
 
             <p class="suggestion-text">
-                Você pode aproveitar essa visita e adicionar
-                os novos serviços ao agendamento existente.
-                Se preferir, também pode manter o novo horário
-                que escolheu.
+                Escolha se deseja adicionar os serviços ao
+                agendamento existente ou manter o novo
+                agendamento na data selecionada.
             </p>
 
             <form
@@ -116,7 +116,7 @@ require __DIR__ . '/../layouts/header.php';
                         value="keep-date"
                         class="button button-secondary"
                     >
-                        Manter novo horário
+                        Manter novo agendamento
                     </button>
 
                 </div>
@@ -126,7 +126,7 @@ require __DIR__ . '/../layouts/header.php';
         </div>
 
         <a href="?action=create" class="back-link">
-            ← Cancelar agendamento
+            ← Voltar
         </a>
 
     </div>

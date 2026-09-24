@@ -17,11 +17,11 @@ $cancelUrl = '?action=details&id=' . (int) $appointment['id'];
         <div class="page-header">
             <span>Agendamento</span>
 
-            <h1>Alterar seu horário</h1>
+            <h1>Alterar agendamento</h1>
 
             <p>
-                Atualize os serviços, a data ou o horário
-                do seu agendamento.
+                Revise os serviços, a data ou o horário
+                que deseja alterar.
             </p>
         </div>
 

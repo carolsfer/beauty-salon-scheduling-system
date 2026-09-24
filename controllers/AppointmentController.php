@@ -76,7 +76,7 @@ class AppointmentController
 
         if (!$client) {
             $phoneError =
-                'Não encontramos agendamentos com este telefone.';
+                'Nenhum cadastro foi encontrado com este telefone.';
 
             require __DIR__ . '/../views/client/access.php';
             return;
@@ -105,7 +105,7 @@ class AppointmentController
         $phone = trim($_POST['phone'] ?? '');
 
         if ($name === '' || $phone === '') {
-            $formError = 'Informe seu nome e telefone.';
+            $formError = 'Preencha seu nome e telefone para continuar.';;
 
             require __DIR__ . '/../views/appointments/create.php';
             return;
@@ -176,7 +176,7 @@ class AppointmentController
         }
 
         if ($date === '' || $time === '') {
-            $formError = 'Data e horário são obrigatórios.';
+            $formError = 'Informe a data e o horário do agendamento.';
 
             require __DIR__ . '/../views/appointments/services.php';
             return;
@@ -185,7 +185,7 @@ class AppointmentController
         $appointmentModel = new Appointment($this->pdo);
 
         if (!$appointmentModel->isValidDatetime($date, $time)) {
-            $formError = 'Data ou horário inválido.';
+            $formError = 'Informe uma data e um horário válidos.';
 
             require __DIR__ . '/../views/appointments/services.php';
             return;
@@ -197,7 +197,7 @@ class AppointmentController
             $appointmentDatetime
         )) {
             $formError =
-                'A data e o horário do agendamento devem ser futuros.';
+                'Escolha uma data e um horário futuros.';
 
             require __DIR__ . '/../views/appointments/services.php';
             return;
@@ -564,14 +564,14 @@ class AppointmentController
         }
 
         if ($date === '' || $time === '') {
-            $formError = 'Data e horário são obrigatórios.';
+            $formError = 'Informe a data e o horário do agendamento.';
 
             require __DIR__ . '/../views/appointments/edit.php';
             return;
         }
 
         if (!$appointmentModel->isValidDatetime($date, $time)) {
-            $formError = 'Data ou horário inválido.';
+            $formError = 'Informe uma data e um horário válidos.';
 
             require __DIR__ . '/../views/appointments/edit.php';
             return;
@@ -583,7 +583,7 @@ class AppointmentController
             $appointmentDatetime
         )) {
             $formError =
-                'A data e o horário do agendamento devem ser futuros.';
+                'Escolha uma data e um horário futuros.';
 
             require __DIR__ . '/../views/appointments/edit.php';
             return;

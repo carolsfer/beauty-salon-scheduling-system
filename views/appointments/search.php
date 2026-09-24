@@ -11,13 +11,13 @@ require __DIR__ . '/../layouts/header.php';
     <div class="container">
 
         <div class="page-header">
-            <span>Meus agendamentos</span>
+            <span>Área do Cliente</span>
 
             <h1>Consultar por período</h1>
 
             <p>
-                Escolha o período que deseja consultar,
-                <?= htmlspecialchars($client['name']) ?>.
+                Defina uma data inicial e final para localizar
+                seus agendamentos nesse intervalo.
             </p>
         </div>
 
@@ -26,6 +26,14 @@ require __DIR__ . '/../layouts/header.php';
             action="?action=search-appointments"
             class="card form-card"
         >
+
+            <?php if (!empty($periodError)): ?>
+
+                <div class="message message-error">
+                    <?= htmlspecialchars($periodError) ?>
+                </div>
+
+            <?php endif; ?>
 
             <div class="date-time-grid">
 
@@ -38,7 +46,7 @@ require __DIR__ . '/../layouts/header.php';
                         type="date"
                         id="start_date"
                         name="start_date"
-                        value="<?= htmlspecialchars($startDate) ?>"
+                        value="<?= htmlspecialchars($startDate ?? '') ?>"
                         required
                     >
                 </div>
@@ -52,29 +60,25 @@ require __DIR__ . '/../layouts/header.php';
                         type="date"
                         id="end_date"
                         name="end_date"
-                        value="<?= htmlspecialchars($endDate) ?>"
+                        value="<?= htmlspecialchars($endDate ?? '') ?>"
                         required
                     >
                 </div>
 
             </div>
 
-            <?php if (!empty($periodError)): ?>
-                <span class="field-error">
-                    <?= htmlspecialchars($periodError) ?>
-                </span>
-            <?php endif; ?>
-
             <div class="form-actions">
+
                 <button type="submit" class="button">
                     Buscar agendamentos
                 </button>
+
             </div>
 
         </form>
 
         <a href="?action=client-area" class="back-link">
-            ← Voltar para minha área
+            ← Voltar para a Área do Cliente
         </a>
 
     </div>

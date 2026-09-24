@@ -35,11 +35,7 @@ if ($from === 'admin') {
         <div class="page-header">
             <span>Agendamento</span>
 
-            <h1>Detalhes do seu horário</h1>
-
-            <p>
-                Confira as informações do seu agendamento.
-            </p>
+            <h1>Detalhes do agendamento</h1>
         </div>
 
         <section class="card details-card">
@@ -130,9 +126,10 @@ if ($from === 'admin') {
             <?php else: ?>
 
                 <div class="message message-error">
-                    Este agendamento não pode mais ser alterado online.
-                    Para alterações com menos de dois dias de antecedência,
-                    entre em contato com o salão.
+                    Este agendamento não pode mais ser alterado online
+                    porque faltam menos de dois dias para o atendimento.
+                    Para fazer alterações, entre em contato com o salão
+                    por telefone.
                 </div>
 
             <?php endif; ?>

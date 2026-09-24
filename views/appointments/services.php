@@ -1,6 +1,7 @@
 <?php
 
-$pageTitle = 'Escolher serviços - Cabeleleila Leila';
+$pageTitle = 'Novo agendamento - Cabeleleila Leila';
+
 $layoutContext = 'public';
 
 require __DIR__ . '/../layouts/header.php';
@@ -16,13 +17,13 @@ $selectedServices = array_map(
     <div class="container">
 
         <div class="page-header">
-            <span>Agendamento</span>
+            <span>Novo agendamento</span>
 
-            <h1>Escolha seus serviços</h1>
+            <h1>Escolha seu atendimento</h1>
 
             <p>
-                Selecione um ou mais serviços e escolha
-                quando você gostaria de vir ao salão.
+                Você pode selecionar mais de um serviço
+                para a mesma visita.
             </p>
         </div>
 
@@ -128,7 +129,7 @@ $selectedServices = array_map(
                     type="submit"
                     class="button"
                 >
-                    Continuar
+                    Revisar agendamento
                 </button>
             </div>
 

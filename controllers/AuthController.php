@@ -42,7 +42,7 @@ class AuthController
             exit;
         }
 
-        $error = 'Usuário ou senha inválidos.';
+        $error = 'Usuário ou senha incorretos.';
 
         require __DIR__ . '/../views/admin/login.php';
     }

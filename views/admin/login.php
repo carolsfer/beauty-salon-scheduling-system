@@ -9,27 +9,36 @@ require __DIR__ . '/../layouts/header.php';
 
 <main>
     <div class="container">
+
         <div class="page-header">
-            <span>Área administrativa</span>
-            <h1>Área da Leila</h1>
+            <span>Área da Leila</span>
+
+            <h1>Acesso administrativo</h1>
+
             <p>
-                Entre para gerenciar os agendamentos do salão.
+                Entre com suas credenciais para acessar
+                os agendamentos e o acompanhamento do salão.
             </p>
         </div>
-
-        <?php if (!empty($error)): ?>
-            <div class="message message-error">
-                <?= htmlspecialchars($error) ?>
-            </div>
-        <?php endif; ?>
 
         <form
             method="POST"
             action="?action=admin-authenticate"
-            class="form-card admin-login-card"
+            class="card form-card login-form"
         >
+
+            <?php if (!empty($error)): ?>
+
+                <div class="message message-error">
+                    <?= htmlspecialchars($error) ?>
+                </div>
+
+            <?php endif; ?>
+
             <div class="form-group">
-                <label for="username">Usuário</label>
+                <label for="username">
+                    Usuário
+                </label>
 
                 <input
                     type="text"
@@ -41,7 +50,9 @@ require __DIR__ . '/../layouts/header.php';
             </div>
 
             <div class="form-group">
-                <label for="password">Senha</label>
+                <label for="password">
+                    Senha
+                </label>
 
                 <input
                     type="password"
@@ -53,15 +64,19 @@ require __DIR__ . '/../layouts/header.php';
             </div>
 
             <div class="form-actions">
+
                 <button type="submit" class="button">
                     Entrar
                 </button>
+
             </div>
+
         </form>
 
         <a href="?action=home" class="back-link">
             ← Voltar para o início
         </a>
+
     </div>
 </main>
 

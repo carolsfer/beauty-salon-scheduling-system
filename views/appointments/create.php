@@ -1,6 +1,6 @@
 <?php
 
-$pageTitle = 'Agendar horário - Cabeleleila Leila';
+$pageTitle = 'Novo agendamento - Cabeleleila Leila';
 $layoutContext = 'public';
 
 require __DIR__ . '/../layouts/header.php';
@@ -11,19 +11,20 @@ require __DIR__ . '/../layouts/header.php';
     <div class="container">
 
         <div class="page-header">
-            <span>Agendamento</span>
+            <span>Novo agendamento</span>
 
-            <h1>Vamos marcar seu horário?</h1>
+            <h1>Vamos começar</h1>
 
             <p>
-                Primeiro, precisamos saber quem está realizando
-                o agendamento.
+                Informe seus dados para continuar.
+                Se você já agendou antes, use o mesmo
+                telefone cadastrado.
             </p>
         </div>
 
         <form
             method="POST"
-            action="?action=identify-client"
+            action="?action=identify"
             class="card form-card"
         >
 
@@ -34,10 +35,10 @@ require __DIR__ . '/../layouts/header.php';
                     type="text"
                     id="name"
                     name="name"
+                    autocomplete="name"
+                    placeholder="Ex.: Ana Souza"
                     value="<?= htmlspecialchars($name ?? '') ?>"
                     required
-                    autocomplete="name"
-                    placeholder="Digite seu nome"
                 >
             </div>
 
@@ -48,22 +49,18 @@ require __DIR__ . '/../layouts/header.php';
                     type="tel"
                     id="phone"
                     name="phone"
+                    autocomplete="tel"
+                    placeholder="(14) 99999-9999"
                     value="<?= htmlspecialchars($phone ?? '') ?>"
                     class="<?= !empty($phoneError) ? 'input-error' : '' ?>"
                     required
-                    autocomplete="tel"
-                    placeholder="(14) 99999-9999"
                 >
-                
+
                 <?php if (!empty($phoneError)): ?>
                     <span class="field-error">
                         <?= htmlspecialchars($phoneError) ?>
                     </span>
                 <?php endif; ?>
-
-                <span class="form-help">
-                    Usaremos seu telefone para localizar seus agendamentos.
-                </span>
             </div>
 
             <div class="form-actions">

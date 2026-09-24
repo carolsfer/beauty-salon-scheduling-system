@@ -34,7 +34,7 @@ $layoutContext = $layoutContext ?? 'public';
                 </a>
 
                 <a href="?action=admin-dashboard">
-                    Desempenho semanal
+                    Resumo semanal
                 </a>
 
                 <a href="?action=admin-logout">
