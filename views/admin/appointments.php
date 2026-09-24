@@ -5,12 +5,6 @@ $layoutContext = 'admin';
 
 require __DIR__ . '/../layouts/header.php';
 
-$statusLabels = [
-    'PENDING' => 'Pendente',
-    'CONFIRMED' => 'Confirmado',
-    'COMPLETED' => 'Concluído'
-];
-
 ?>
 
 <main>
@@ -22,8 +16,8 @@ $statusLabels = [
             <h1>Agendamentos do salão</h1>
 
             <p>
-                Consulte os atendimentos recebidos, altere seus dados
-                e acompanhe o andamento de cada um.
+                Consulte os atendimentos recebidos, altere seus status
+                e acesse os detalhes de cada agendamento.
             </p>
         </div>
 
@@ -45,127 +39,143 @@ $statusLabels = [
             <form
                 method="POST"
                 action="?action=admin-update-statuses"
+                class="admin-appointments-form"
             >
 
-                <div class="appointment-list">
+                <div class="admin-table-wrapper">
 
-                    <?php foreach ($appointments as $appointment): ?>
+                    <table class="admin-table">
 
-                        <?php
-                        $status = $appointment['status'];
-                        $statusLabel = $statusLabels[$status] ?? $status;
-                        ?>
+                        <thead>
+                            <tr>
+                                <th>Data</th>
+                                <th>Horário</th>
+                                <th>Cliente</th>
+                                <th>Telefone</th>
+                                <th>Status</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
 
-                        <article class="card appointment-card">
+                        <tbody>
 
-                            <div class="appointment-date">
+                            <?php foreach ($appointments as $appointment): ?>
 
-                                <span>
-                                    <?= date(
-                                        'd/m/Y',
-                                        strtotime(
-                                            $appointment[
-                                                'appointment_datetime'
-                                            ]
-                                        )
-                                    ) ?>
-                                </span>
+                                <tr>
 
-                                <strong>
-                                    <?= date(
-                                        'H:i',
-                                        strtotime(
-                                            $appointment[
-                                                'appointment_datetime'
-                                            ]
-                                        )
-                                    ) ?>
-                                </strong>
+                                    <td>
+                                        <strong>
+                                            <?= date(
+                                                'd/m/Y',
+                                                strtotime(
+                                                    $appointment['appointment_datetime']
+                                                )
+                                            ) ?>
+                                        </strong>
+                                    </td>
 
-                            </div>
+                                    <td>
+                                        <?= date(
+                                            'H:i',
+                                            strtotime(
+                                                $appointment['appointment_datetime']
+                                            )
+                                        ) ?>
+                                    </td>
 
-                            <div class="appointment-info">
+                                    <td>
+                                        <?= htmlspecialchars(
+                                            $appointment['client_name']
+                                        ) ?>
+                                    </td>
 
-                                <strong>
-                                    <?= htmlspecialchars(
-                                        $appointment['client_name']
-                                    ) ?>
-                                </strong>
+                                    <td>
+                                        <?= htmlspecialchars(
+                                            $appointment['client_phone']
+                                        ) ?>
+                                    </td>
 
-                                <span>
-                                    <?= htmlspecialchars(
-                                        $appointment['client_phone']
-                                    ) ?>
-                                </span>
-
-                            </div>
-
-                            <div class="appointment-status">
-
-                                <label
-                                    for="status-<?= (int) $appointment['id'] ?>"
-                                >
-                                    Status
-                                </label>
-
-                                <select
-                                    id="status-<?= (int) $appointment['id'] ?>"
-                                    name="statuses[<?= (int) $appointment['id'] ?>]"
-                                >
-
-                                    <?php foreach (
-                                        $statusLabels as
-                                        $statusValue => $label
-                                    ): ?>
-
-                                        <option
-                                            value="<?= $statusValue ?>"
-                                            <?= $status === $statusValue
-                                                ? 'selected'
-                                                : '' ?>
+                                    <td>
+                                        <select
+                                            class="admin-status-select"
+                                            name="statuses[<?= (int) $appointment['id'] ?>]"
                                         >
-                                            <?= htmlspecialchars($label) ?>
-                                        </option>
+                                            <option
+                                                value="PENDING"
+                                                <?= $appointment['status'] === 'PENDING'
+                                                    ? 'selected'
+                                                    : '' ?>
+                                            >
+                                                Pendente
+                                            </option>
 
-                                    <?php endforeach; ?>
+                                            <option
+                                                value="CONFIRMED"
+                                                <?= $appointment['status'] === 'CONFIRMED'
+                                                    ? 'selected'
+                                                    : '' ?>
+                                            >
+                                                Confirmado
+                                            </option>
 
-                                </select>
+                                            <option
+                                                value="COMPLETED"
+                                                <?= $appointment['status'] === 'COMPLETED'
+                                                    ? 'selected'
+                                                    : '' ?>
+                                            >
+                                                Concluído
+                                            </option>
+                                        </select>
+                                    </td>
 
-                            </div>
+                                    <td>
+                                        <div class="table-actions">
 
-                            <div class="appointment-actions">
+                                            <a
+                                                href="?action=details&id=<?= (int) $appointment['id'] ?>&from=admin"
+                                            >
+                                                Ver detalhes
+                                            </a>
 
-                                <a
-                                    href="?action=details&id=<?= (int) $appointment['id'] ?>&from=admin"
-                                    class="button button-secondary"
-                                >
-                                    Ver detalhes
-                                </a>
+                                            <a
+                                                href="?action=admin-edit&id=<?= (int) $appointment['id'] ?>"
+                                            >
+                                                Alterar
+                                            </a>
 
-                                <a
-                                    href="?action=admin-edit&id=<?= (int) $appointment['id'] ?>"
-                                    class="button button-secondary"
-                                >
-                                    Alterar agendamento
-                                </a>
+                                        </div>
+                                    </td>
 
-                            </div>
+                                </tr>
 
-                        </article>
+                            <?php endforeach; ?>
 
-                    <?php endforeach; ?>
+                        </tbody>
+
+                    </table>
 
                 </div>
 
-                <div class="form-actions">
+                <div class="admin-save-actions">
+
                     <button type="submit" class="button">
                         Salvar status
                     </button>
+
+                    <span>
+                        Salva os status selecionados na tabela.
+                    </span>
+
                 </div>
 
             </form>
 
         <?php endif; ?>
+
+        <a href="?action=home" class="back-link">
+            ← Voltar para o site
+        </a>
 
     </div>
 </main>
