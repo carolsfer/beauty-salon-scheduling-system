@@ -15,12 +15,12 @@ require __DIR__ . '/layouts/header.php';
             <p>Salão de beleza</p>
 
             <h1>
-                Seu momento de cuidado começa aqui.
+                Seu momento de cuidado começa aqui!
             </h1>
 
             <p>
                 Agende seus serviços de forma simples e acompanhe
-                seus horários sem precisar ligar para o salão.
+                seus horários sem precisar sair de casa.
             </p>
 
             <div class="actions">

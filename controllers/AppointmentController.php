@@ -251,7 +251,7 @@ class AppointmentController
             $this->pdo->commit();
 
             header(
-                'Location: ?action=appointment-details&id='
+                'Location: ?action=details&id='
                 . $appointmentId
             );
             exit;
@@ -341,7 +341,7 @@ class AppointmentController
             unset($_SESSION['pending_appointment']);
 
             header(
-                'Location: ?action=appointment-details&id='
+                'Location: ?action=details&id='
                 . $appointmentId
             );
             exit;
@@ -491,7 +491,7 @@ class AppointmentController
             )
         ) {
             header(
-                'Location: ?action=appointment-details&id='
+                'Location: ?action=details&id='
                 . $appointmentId
             );
             exit;
@@ -538,7 +538,7 @@ class AppointmentController
             )
         ) {
             header(
-                'Location: ?action=appointment-details&id='
+                'Location: ?action=details&id='
                 . $appointmentId
             );
             exit;
@@ -618,7 +618,7 @@ class AppointmentController
             $this->pdo->commit();
 
             header(
-                'Location: ?action=appointment-details&id='
+                'Location: ?action=details&id='
                 . $appointmentId
             );
             exit;

@@ -5,11 +5,6 @@ $layoutContext = 'public';
 
 require __DIR__ . '/../layouts/header.php';
 
-$selectedServiceIds = array_column(
-    $selectedServices,
-    'id'
-);
-
 $formAction = '?action=update';
 $clientLabel = 'Agendamento para';
 $cancelUrl = '?action=details&id=' . (int) $appointment['id'];
