@@ -27,6 +27,13 @@ $cancelUrl = '?action=admin-appointments';
 
         <?php require __DIR__ . '/../partials/appointment-form.php'; ?>
 
+        <a
+            href="?action=admin-appointments"
+            class="back-link"
+        >
+            ← Voltar para os agendamentos
+        </a>
+
     </div>
 </main>
 

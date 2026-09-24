@@ -24,7 +24,7 @@ require __DIR__ . '/../layouts/header.php';
         <form
             method="POST"
             action="?action=admin-authenticate"
-            class="card form-card login-form"
+            class="form-card admin-login-card"
         >
 
             <?php if (!empty($error)): ?>

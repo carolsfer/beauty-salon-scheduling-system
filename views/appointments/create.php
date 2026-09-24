@@ -24,7 +24,7 @@ require __DIR__ . '/../layouts/header.php';
 
         <form
             method="POST"
-            action="?action=identify"
+            action="?action=identify-client"
             class="card form-card"
         >
 
